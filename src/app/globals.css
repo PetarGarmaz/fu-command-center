@@ -1,14 +1,14 @@
 @import "tailwindcss";
 
 :root {
-	--background: #ffffff;
+	--background: #0a0a0a;
 	--foreground: #171717;
 	scroll-behavior: smooth;
 }
 
 @theme inline {
 	--color-background: var(--background);
-	--color-foreground: var(--foreground);
+	--color-foreground: var(--0a0a0a);
 	--font-sans: var(--font-geist-sans);
 	--font-mono: var(--font-geist-mono);
 }
@@ -23,9 +23,201 @@
 body {
 	background: linear-gradient(#000000, #0b0b0b);
 	color: var(--foreground);
-	font-family: var(--font-mono), 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+	font-family: var(--font-mono), 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans';
 }
 
-thumbnail-size {
-	background-size: cover;
+@keyframes loading-animation {
+	0% {scale: 4; color:#9f0712; background: radial-gradient(#9f071250, transparent, transparent);}
+	25% {scale: 6; color: #9f0712; background: radial-gradient(#9f071250, transparent, transparent);}
+	50% {scale: 4; color: #9f0712; background: radial-gradient(#9f071250, transparent, transparent);}
+	75% {scale: 6; color: #9f0712; background: radial-gradient(#9f071250, transparent, transparent);}
+	100% {scale: 4; color: transparent; background: radial-gradient(transparent, transparent, transparent);}
+}
+
+@keyframes fade-in-animation {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+/* The element to apply the animation to */
+.loading {
+	animation-fill-mode: forwards;
+	animation-name: loading-animation;
+	animation-duration: 3s;
+	color:transparent;
+	scale: 4;
+	background: transparent;
+}
+
+.fade-opacity {
+	animation-fill-mode: forwards;
+	animation-name: fade-in-animation;
+	animation-duration: 1s;
+}
+
+.fade-opacity-delay {
+	animation-fill-mode: forwards;
+	animation-name: fade-in-animation;
+	animation-delay: 1s;
+	animation-duration: 1s;
+}
+
+.nav-link {
+position: relative;
+transition: color 0.3s ease;
+}
+
+.nav-link::after {
+content: '';
+position: absolute;
+bottom: -2px;
+left: 0;
+width: 0;
+height: 2px;
+background-color: #9f0712;
+transition: width 0.3s ease;
+}
+
+.nav-link:hover::after {
+width: 100%;
+}
+
+.quill-content {
+line-height: 1.7;
+}
+
+/* Headings */
+.quill-content h1 {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin: 1.5rem 0 1rem 0;
+}
+
+.quill-content h2 {
+	font-size: 1.25rem;
+	font-weight: 700;
+	margin: 1.3rem 0 0.8rem 0;
+}
+
+.quill-content h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+	margin: 1.2rem 0 0.6rem 0;
+}
+
+/* Bold / Italic / Underline */
+.quill-content strong {
+	font-weight: 700;
+}
+
+.quill-content em {
+	font-style: italic;
+}
+
+.quill-content u {
+	text-decoration: underline;
+}
+
+/* Blockquotes */
+.quill-content blockquote {
+	border-left: 4px solid #3f3f46; /* zinc-700 */
+	padding-left: 1rem;
+	color: #a1a1aa; /* zinc-400 */
+	font-style: italic;
+}
+
+/* Ordered list */
+.quill-content ol {
+	list-style-type: decimal;
+	padding-left: 1.25rem;
+}
+
+/* Unordered list */
+.quill-content ul {
+	list-style-type: disc;
+	padding-left: 1.25rem;
+}
+
+/* List items */
+.quill-content li {
+	margin: 0.25rem 0;
+}
+
+/* Make Quill bullet lists show bullets */
+.quill-content ol li[data-list="bullet"] {
+	list-style-type: disc !important;
+	display: list-item !important;
+}
+
+/* Remove the weird Quill UI span */
+.quill-content li[data-list="bullet"] > .ql-ui {
+	display: none;
+}
+
+/* Link */
+.quill-content a {
+	@apply text-red-800;
+	text-decoration: underline;
+}
+
+.quill-content a:hover {	
+	@apply text-red-500;
+}
+
+/* Inline code */
+.quill-content code {
+	background: #18181b;
+	color: #22c55e;
+	padding: 0.2rem 0.35rem;
+	border-radius: 4px;
+	font-size: 0.9rem;
+}
+
+/* Code block */
+.quill-content pre {
+	background: #18181b;
+	color: #22c55e;
+	padding: 1rem;
+	border-radius: 6px;
+	overflow-x: auto;
+	margin-bottom: 1rem;
+	font-size: 0.9rem;
+}
+
+/* Images (if enabled later) */
+.quill-content img {
+	max-width: 100%;
+	border-radius: 6px;
+	margin: 1rem 0;
+}
+
+/* Quill text alignment classes */
+.ql-align-center {
+  text-align: center;
+}
+
+.ql-align-right {
+  text-align: right;
+}
+
+.ql-align-justify {
+  text-align: justify;
+}
+
+/* Optional: make images align when in aligned <p> */
+.ql-align-center img {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.ql-align-right img {
+  margin-left: auto;
+  margin-right: 0;
+  display: block;
+}
+
+/* Justify paragraphs inside justification */
+.ql-align-justify p {
+  text-align: justify;
 }

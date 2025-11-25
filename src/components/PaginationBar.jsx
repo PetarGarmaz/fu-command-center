@@ -1,3 +1,5 @@
+"use client"
+
 import {ChevronLeft, ChevronRight} from 'lucide-react';
 import { missionStore } from '@/stores/missionStore'
 
@@ -43,7 +45,31 @@ const PaginationBar = ({type}) => {
 				</button>
 			</div>
 		)
-	}	
+	} else if (type == "profile") {
+		const pages = Array.from({ length: missionStore.totalProfilePages }, (_, i) => i + 1);
+
+		return (
+			<div className='flex mt-10 gap-2 justify-center'>
+				<button type='button' disabled={missionStore.currentProfilePage == 1} onClick={() => missionStore.setCurrentProfilePage(Math.max(1, missionStore.currentProfilePage - 1))} className='cursor-pointer w-10 h-10 rounded-lg bg-black/30 hover:bg-neutral-800/50 transition duration-300 disabled:bg-neutral-900/70 disabled:text-neutral-600'>
+					<ChevronLeft className='place-self-center'/>
+				</button>
+
+				{pages.map((page, index) => (
+					<button type='button' key={index} onClick={() => missionStore.setCurrentProfilePage(page)} className={`cursor-pointer w-10 h-10 rounded-lg transition duration-300 ${page == missionStore.currentProfilePage ? "bg-red-800/30 hover:bg-red-600" : "bg-black/30 hover:bg-neutral-800/50"}`}>
+						{page}
+					</button>
+				))}
+
+				<button type='button' disabled={missionStore.currentProfilePage == missionStore.totalProfilePages || missionStore.totalProfilePages == 0} onClick={() => missionStore.setCurrentProfilePage(Math.max(missionStore.totalProfilePages, missionStore.currentArchivedPage + 1))} className='cursor-pointer w-10 h-10 rounded-lg bg-black/30 hover:bg-neutral-800/50 transition duration-300 disabled:bg-neutral-900/70 disabled:text-neutral-600'>
+					<ChevronRight className='place-self-center'/>
+				</button>
+			</div>
+		)
+	} else {
+		return (
+			<div></div>
+		);
+	}
 }
 
 export default PaginationBar

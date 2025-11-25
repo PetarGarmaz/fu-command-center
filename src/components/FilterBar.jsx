@@ -5,12 +5,14 @@ import { missionStore } from '@/stores/missionStore'
 
 const FilterBar = ({type}) => {
 	const [searchbar, setSearchbar] = useState("");
+	const [host, setHost] = useState("");
 	const [terrain, setTerrain] = useState("");
 	const [role, setRole] = useState("");
 	const [status, setStatus] = useState("");
 
 	const handleInputChange = (e) => {
 		let newSearch = searchbar;
+		let newHost = host;
 		let newTerrain = terrain;
 		let newRole = role;
 		let newStatus = status;
@@ -18,6 +20,9 @@ const FilterBar = ({type}) => {
 		if(e.target.id == "search") {
 			setSearchbar(e.target.value);
 			newSearch = e.target.value;
+		} else if (e.target.id == "host") {
+			setHost(e.target.value);
+			newHost = e.target.value;
 		} else if (e.target.id == "terrain") {
 			setTerrain(e.target.value);
 			newTerrain = e.target.value;
@@ -30,24 +35,38 @@ const FilterBar = ({type}) => {
 		};
 
 		if(type == "upcoming") {
-			missionStore.getFilteredUpcomingMissions(newSearch, newTerrain, newRole);
+			missionStore.getFilteredUpcomingMissions(newSearch, newHost, newTerrain, newRole);
 		} else if(type == "archived") {
-			missionStore.getFilteredArchivedMissions(newSearch, newTerrain, newStatus);
+			missionStore.getFilteredArchivedMissions(newSearch, newHost, newTerrain, newStatus);
+		} else if(type == "profile") {
+			missionStore.getFilteredProfileMissions(newSearch, newHost, newTerrain);
 		};
 	}
 
 	return (
-		<div className='relative rounded-lg p-5 backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden grid grid-cols-5 gap-5'>
+		<div className='relative rounded-lg p-5 backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden grid lg:grid-cols-6 grid-cols-1 gap-5'>
 			{/*Filter icon and heading*/}
-			<div className='flex my-auto ml-5 gap-5'>
+			<div className='flex my-auto gap-5'>
 				<Filter className='h-10 w-10'/>
-				<h2 className='text-2xl'>Filters</h2>
+				<h2 className='text-2xl self-center'>Filters</h2>
 			</div>
 
 			{/*Searchbar*/}
-			<div className='flex flex-col col-span-2 gap-2'>
+			<div className='flex flex-col lg:col-span-2 gap-2'>
 				<label className='text-lg font-semibold uppercase tracking-widest'>SEARCH</label>
-				<input type="text" id="search" name="search" value={searchbar} onChange={(e) => handleInputChange(e)} placeholder='Search by operation name or host name.' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-1 text-white '/>
+				<input type="text" id="search" name="search" value={searchbar} onChange={(e) => handleInputChange(e)} placeholder='Search by operation name' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-1 text-white '/>
+			</div>
+
+			{/*Hosts*/}
+			<div className='flex flex-col gap-2'>
+				<label  className='text-lg font-semibold uppercase tracking-widest'>HOST</label>
+
+				<select type="select" id="host" name="host" value={host} onChange={(e) => handleInputChange(e)} className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-1 text-white '>
+					<option value="">All</option>
+					{missionStore.availableHosts.map((host, index) => (
+						<option key={index} value={host}>{host}</option>
+					))}
+				</select>
 			</div>
 
 			{/*Terrains*/}

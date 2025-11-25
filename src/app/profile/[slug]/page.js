@@ -1,13 +1,13 @@
-import Mission from '@/components/Mission'
+import Profile from '@/components/Profile'
 
-const MissionPage = async({params}) => {
+const ProfilePage = async ({params}) => {
 	const {slug} = await params;
 
 	return (
 		<div className='bg-radial-[at_50%_0%] from-red-900/20 to-transparent min-h-screen'>
-			<Mission slug={slug}/>
+			<Profile slug={slug}/>
 		</div>
 	)
 }
 
-export default MissionPage
+export default ProfilePage

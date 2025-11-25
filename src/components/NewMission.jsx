@@ -1,72 +1,208 @@
 "use client"
 
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { observer } from 'mobx-react-lite'
-import { CheckCircle, PlusSquare, X} from 'lucide-react';
+import { CheckCircle, PlusSquare, X, Upload} from 'lucide-react';
 import { missionStore } from '@/stores/missionStore'
 import { formStore } from '@/stores/formStore'
+import { userStore } from '@/stores/userStore'
 import { supabase } from "@/utilities/supabaseClient";
+import RichTextEditor from '@/components/TextEditor';
 
-const NewMission = () => {
-	const [creator, setCreator] = useState(null);
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
-	async function signInWithDiscord() {
-		const { data, error } = await supabase.auth.signInWithOAuth({
-			provider: 'discord',
-			options: {
-				redirectTo: window.location.href
-			}
-		})
+const NewMission = ({type, slug}) => {
+	const [dragActive, setDragActive] = useState(false);
+	const [selectedDate, setSelectedDate] = useState(Date.now());
+	const [editMission, setEditMission] = useState(null);
+	
+
+	function isFriday(date) {
+		return date.getDay() === 5;
+	}
+
+	const getNextAvailableFriday = () => {
+		if(type !== "edit") {
+			const date = new Date();
+			const day = date.getDay();
+			const daysUntilFriday = (5 - day + 7) % 7 || 7;
+			date.setDate(date.getDate() + daysUntilFriday);
+
+			while (missionStore.missions.some(m => m.date.split("T")[0] === toLocalYMD(date))) {
+				date.setDate(date.getDate() + 7);
+			};
+
+			setSelectedDate(date);
+		}
+	}
+
+	function toLocalYMD(date) {
+		const y = date.getFullYear();
+		const m = String(date.getMonth() + 1).padStart(2, "0");
+		const d = String(date.getDate()).padStart(2, "0");
+		return `${y}-${m}-${d}`;
+	}
+
+	const isDateAvailable = (date) => {
+		const isTaken = missionStore.missions.some((m) => m.date.split("T")[0] === toLocalYMD(date));
+
+		if (formStore.formData.type === "main") {
+			return isFriday(date) && !isTaken;
+		}
+		
+		return !isTaken;
+	};
+
+	const handleImageUpload = (file) => {
+		formStore.handleImageUpload(file, false);
+	};
+
+	const removeImage = () => {
+		formStore.handleImageUpload(null, true);
+	}
+
+	const handleDrag = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+
+		if (e.type === "dragenter" || e.type === "dragover") {
+			setDragActive(true);
+		} else if (e.type === "dragleave") {
+			setDragActive(false);
+		}
+	};
+
+	const handleDrop = (e) => {
+		e.preventDefault();
+		e.stopPropagation();
+		setDragActive(false);
+		
+		if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+			handleImageUpload(e.dataTransfer.files);
+		}
 	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
-		formStore.isSubmitting = true;
+		formStore.setIsSubmitting(true);
 
 		try {
-			const response = await missionStore.addMission(formStore.formData);
+			const processedTime = new Date(selectedDate);
+			var processedImage = "";
 
-			if (response) {
-				formStore.submitSuccess = true;
+			//Send image to the database
+			if(formStore.formData.image instanceof File) {
+				const filePath = formStore.formData.image.name;
 
-				//Clear form
-				formStore.setFormData({
-					title: "",
-					creator: user,
-					host: "",
-					type: "Main",
-					date: "2025-11-14",
-					map: "",
-					sections: [
-						{ title: "Situation", description: "" }
-					],
-					image: "",
-					status: "",
-					statusDesc: "",
-					roles: [],
-					attachedMission: {}
-				});
-			};
+				const { error } = await supabase.storage.from("images").upload(filePath, formStore.formData.image, {cacheControl: '3600',upsert: true});
+				
+				if (error) {
+					throw new TypeError("Image upload failed: " + error.message);
+				} else {
+					console.log(`Uploaded: ${filePath}`);
+
+					// Get public URL
+					const { data } = supabase.storage.from("images").getPublicUrl(filePath);
+					processedImage = data.publicUrl;
+					
+					console.log("File available at:", data.publicUrl);
+				};
+			} else {
+				processedImage = formStore.formData.image;
+			}
+
+			if(type == "edit") {
+				const response = await missionStore.editMission(editMission.id, formStore.formData, userStore.currentUser, processedImage, processedTime.toISOString());
+
+				if (response) {
+					formStore.setSubmitSuccess(true);
+
+					//Clear form
+					formStore.setFormData({
+						title: "",
+						creator: {},
+						host: "",
+						type: "main",
+						date: null,
+						map: "",
+						sections: [
+							{ title: "Situation", description: "" }
+						],
+						image: "",
+						status: "",
+						statusDesc: "",
+						roles: [],
+						attachedMission: "",
+						faction: ""
+					});
+				};
+			} else {
+				const response = await missionStore.addMission(formStore.formData, userStore.currentUser, processedImage, processedTime.toISOString());
+
+				if (response) {
+					formStore.setSubmitSuccess(true);
+
+					//Clear form
+					formStore.setFormData({
+						title: "",
+						creator: {},
+						host: "",
+						type: "main",
+						date: null,
+						map: "",
+						sections: [
+							{ title: "Situation", description: "" }
+						],
+						image: "",
+						status: "",
+						statusDesc: "",
+						roles: [],
+						attachedMission: "",
+						faction: ""
+					});
+				};
+			}
 		} catch (error) {
 			console.error('Error submitting form:', error.message);
 			alert(`Error submitting form: ${error.message}. Try again or contact Bizo.`);
 		} finally {
-			formStore.isSubmitting = false;
+			formStore.setIsSubmitting(false);
 		}
 	}
 
-	const getUser = async () => {
-		const { data: { user } } = await supabase.auth.getUser();
-		setCreator(user);
-	}
-
 	useEffect(() => {
-		getUser();		
-	}, []);
+		if(type == "edit") {
+			const missionData = missionStore.missions.find(m => m.slug === slug);
 
-	if(!creator) {
+			if(missionData) {
+				formStore.setFormData({...formStore.formData, 
+					title: missionData.title,
+					creator: missionData.creator,
+					host: missionData.host,
+					type: missionData.type,
+					date: missionData.date,
+					map: missionData.map,
+					sections: missionData.sections,
+					status: missionData.status,
+					statusDesc: missionData.statusDesc,
+					roles: missionData.roles,
+					attachedMission: missionData.attachedMission,
+					faction: missionData.faction,
+					image: missionData.image
+				});
+
+				setSelectedDate(new Date(missionData.date));
+				setEditMission(missionData);
+			}
+		}
+
+		getNextAvailableFriday();
+	}, [formStore.type, missionStore.missions]);
+
+	if(!userStore.currentUser) {
 		return(
-			<div className='container mx-auto py-20 px-40'>
+			<div className='fade-opacity-delay opacity-0 container mx-auto py-20 px-40'>
 				<section className='relative py-10 rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden'>
 					{/*Special line*/}
 					<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
@@ -92,7 +228,7 @@ const NewMission = () => {
 
 	if(formStore.submitSuccess) {
 		return (
-			<div className='container mx-auto py-20 px-40'>
+			<div className='fade-opacity container mx-auto py-20 px-40'>
 				<section className='relative py-10 rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden'>
 					{/*Special line*/}
 					<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
@@ -103,7 +239,7 @@ const NewMission = () => {
 								<CheckCircle className="w-10 h-10 text-zinc-400" />
 							</div>
 						</div>
-						<h1 className='text-center text-3xl text-zinc-400 font-semibold uppercase tracking-wide'>MISSION CREATED</h1>
+						<h1 className='text-center text-3xl text-zinc-400 font-semibold uppercase tracking-wide'>MISSION {type == "edit" ? "EDITED" : "CREATED"}</h1>
 						<p className='text-center text-lg text-zinc-400 mt-5'>You've successfully scheduled a mission.</p>
 
 						<div className='grid grid-cols-2 gap-10 mx-10 mt-10'>
@@ -117,27 +253,27 @@ const NewMission = () => {
 	}
 
 	return (
-		<div className='container mx-auto py-20 px-40'>
+		<div className='fade-opacity container mx-auto py-20 lg:px-40 px-10 max-sm:px-5'>
 			{/* Go back*/}
-			<a href='/' className=' rounded-lg my-5 py-2 px-5 hover:bg-neutral-800 transition duration-300'>← Back to Dashboard</a>
+			<a href='/' className='rounded-lg my-5 py-2 px-5 hover:bg-neutral-800 transition duration-300 text-lg'>← Back to Dashboard</a>
 
 			{/* Titles...*/}
 			<div className='flex items-center gap-5 my-5'>
-				<PlusSquare className='h-20 w-20'/>
+				<PlusSquare className='lg:h-20 lg:w-20 w-10 h-10'/>
 
 				<div>
-					<h1 className='text-4xl font-bold uppercase tracking-widest'>Create New Mission</h1>
-					<p className='text-xl text-neutral-500 trakcing-wider'>Plan and schedule a new mission.</p>
+					<h1 className='lg:text-4xl text-2xl font-bold uppercase tracking-widest'>Create New Mission</h1>
+					<p className='lg:text-xl text-lg text-neutral-500 trakcing-wider'>Plan and schedule a new mission.</p>
 				</div>
 			</div>
 
 			{/* Main form */}
 			<form onSubmit={(e) => handleSubmit(e)} className='relative'>
-				<div className='p-10 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
+				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission details</h2>
 
-					<div className='mt-10 grid grid-cols-2 gap-10'>
-						<div className='flex flex-col col-span-2 gap-2'>
+					<div className='mt-10 grid lg:grid-cols-2 grid-cols-1 gap-10'>
+						<div className='flex flex-col lg:col-span-2 gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Operation Name *</label>
 							<input type="text" required id="title" name="title" value={formStore.formData.title} onChange={(e) => formStore.handleInputChange(e)} placeholder='Operation: Emerald, Operation: D-Day, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
 						</div>
@@ -148,28 +284,44 @@ const NewMission = () => {
 						</div>
 
 						<div className='flex flex-col gap-2'>
-							<label className='text-xl font-semibold uppercase tracking-wide'>Date *</label>
-							<input type="date" required step="7" id="date" name="date" value={formStore.formData.date} onChange={(e) => formStore.handleInputChange(e)} placeholder='Warlord Beezo, Sajfert, Slobodan Beast, Nameless Novichok, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+							<label className='text-xl font-semibold uppercase tracking-wide'>Mission type *</label>
+							<select type="select" id="type" name="type" value={formStore.formData.type} onChange={formStore.handleInputChange} className=' bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white text-lg focus:outline-none'>
+								<option value="main">Main</option>
+								<option value="optional">Optional</option>
+							</select>
 						</div>
+
+						<div className='flex flex-col gap-2'>
+							<label className='text-xl font-semibold uppercase tracking-wide'>Date *</label>
+							<DatePicker required showTimeSelect timeFormat="HH:mm" dateFormat="EEEE, MMMM d, yyyy HH:mm" timeIntervals={30} timeInputLabel="Time" selected={selectedDate} onChange={(date) => setSelectedDate(date)} minDate={new Date()} maxDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))} filterDate={isDateAvailable} id="date" name="date" className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg w-full'/>
+						</div>
+
+						{/* Empty div to split up required from non required */}
+						<div></div>
 
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Terrain</label>
 							<input type="text" id="terrain" name="terrain" value={formStore.formData.map} onChange={(e) => formStore.handleInputChange(e)} placeholder='Altis, Chernarus, Farabad, Sahrani, etc..' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
 						</div>
+
+						<div className='flex flex-col gap-2'>
+							<label className='text-xl font-semibold uppercase tracking-wide'>Faction</label>
+							<input type="text" id="faction" name="faction" value={formStore.formData.faction} onChange={(e) => formStore.handleInputChange(e)} placeholder='NATO, CSAT, AAF, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+						</div>
 					</div>
 				</div>
 
-				<div className='p-10 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
+				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission Briefing</h2>
 
-						<div className='flex flex-col col-span-2 gap-10 mt-10'>
+						<div className='flex flex-col gap-10 mt-10'>
 							{formStore.formData.sections.map((section, index) => (
 								<div key={index} className='flex flex-col'>
 									<label className='text-xl font-semibold uppercase tracking-wide'>Briefing Section {index + 1}</label>
 
 									<label className='text-lg mt-2 font-semibold uppercase tracking-wide'>Title *</label>
 									<div className='flex gap-2'>
-										<input type="text" required id="briefing_title" name="briefing_title" value={section.title} onChange={(e) => formStore.handleBriefingChange(e, index)} placeholder='Situation, Mission, Objectives, Execution, Enemy forces, etc...' className='mt-2 w-full bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+										<input type="text" required id="briefing_title" name="briefing_title" value={section.title} onChange={(e) => formStore.handleBriefingChange(e, true, index)} placeholder='Situation, Mission, Objectives, Execution, Enemy forces, etc...' className='mt-2 w-full bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
 										
 										{index > 0 && (
 											<button type='button' onClick={() => formStore.removeSection(index)} className='place-self-center bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 h-10 w-10'>
@@ -179,7 +331,7 @@ const NewMission = () => {
 									</div>
 
 									<label className='text-lg mt-2 font-semibold uppercase tracking-wide'>Description *</label>
-									<textarea id="briefing_desc" required name="briefing_desc" value={section.description} onChange={(e) => formStore.handleBriefingChange(e, index)} placeholder='Lorem ipsum dolor sit amet, consectetur adipiscing elit...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+									<RichTextEditor value={section.description} onChange={(e) => formStore.handleBriefingChange(e, false, index)} placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."/>
 								</div>
 							))}
 
@@ -187,7 +339,7 @@ const NewMission = () => {
 						</div>
 				</div>
 
-				<div className='p-10 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
+				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Roles</h2>
 
 					<div className='flex flex-col gap-2 mt-10'>
@@ -212,10 +364,44 @@ const NewMission = () => {
 					</div>
 				</div>
 
+				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
+					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission thumbnail</h2>
+
+					<div className='flex flex-col gap-2 mt-10 '>
+						<label className='text-xl font-semibold uppercase tracking-wide'>Image upload</label>
+						<div onDragEnter={handleDrag} onDragLeave={handleDrag} onDragOver={handleDrag} onDrop={handleDrop} className={`flex flex-col gap-2 border-2 border-dashed rounded-lg p-8 text-center transition-colors ${dragActive ? 'border-red-800 bg-black/30' : 'border-gray-300 hover:border-gray-400'}`}>
+							
+							<Upload className="w-12 h-12 mx-auto mb-4" />
+							<p className="mb-2">Drag and drop images here.</p>
+							<p className="text-gray-500 text-sm mb-4">.png, .jpg, .bmp, .gif</p>
+
+							<input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files)} className="hidden" id="image"/>
+
+							<button type="button" onClick={() => document.getElementById('image').click()} className='col-span-4 bg-red-800/30 hover:bg-red-500/70 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>
+								Select Image
+							</button>
+						</div>
+					</div>
+
+					{formStore.formData.image && (
+						<div className='flex flex-col gap-2 mt-10 '>
+							<label className='text-xl font-semibold uppercase tracking-wide'>Image preview</label>
+							<button type="button" onClick={() => removeImage()} className='relative w-full group cursor-pointer hover:bg-red-800/30 rounded-lg'>
+								<img src={formStore.formData.image instanceof File ? URL.createObjectURL(formStore.formData.image) : formStore.formData.image} alt="image preview" className='w-full object-cover rounded-lg group-hover:opacity-50 transition-all duration-300'/>
+								<X className='absolute h-20 w-20 top-5 right-5 opacity-0 group-hover:opacity-100 bg-red-900 p-3 rounded-lg transition-all duration-300'/>
+							</button>
+						</div>
+					)}
+				</div>
+
 				
 				<div className='grid grid-cols-5 mt-20 gap-10'>
-					<button type='submit' className='col-span-4 bg-red-800/30 hover:bg-red-500/70 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Create Mission</button>
-					<a href='/' className='text-center bg-black/50 hover:bg-neutral-800/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Cancel</a>
+					{type == "edit" ? (
+						<button type='submit' disabled={formStore.isSubmitting} className='lg:col-span-4 col-span-5 bg-red-800/30 hover:bg-red-500/70 disabled:bg-red-900/10 disabled:text-neutral-500 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Edit Mission</button>
+					) : (
+						<button type='submit' disabled={formStore.isSubmitting} className='lg:col-span-4 col-span-5 bg-red-800/30 hover:bg-red-500/70 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Create Mission</button>
+					)}
+					<a href='/' disabled={formStore.isSubmitting} className='text-center bg-black/50 hover:bg-neutral-800/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Cancel</a>
 				
 				</div>
 			</form>

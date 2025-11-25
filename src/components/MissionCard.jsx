@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import {roleData} from "@/utilities/roles.js"
-import { Calendar, Clock, MapPin, User } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, ShieldHalf } from 'lucide-react';
 import Link from 'next/link';
+import { userStore } from '@/stores/userStore';
 
 const MissionCard = ({mission}) => {
+	const [creator, setCreator] = useState();
 	const [thumbnail, setThumbnail] = useState();
 	const [description, setDescription] = useState();
 	const [shortDescription, setShortDescription] = useState();
@@ -12,6 +14,7 @@ const MissionCard = ({mission}) => {
 
 	useEffect(() => {
 		if(mission) {
+			setCreator(userStore.allUsers.find(u => u.id == mission.creator));
 			setThumbnail(mission.image ? mission.image : "/fu_placeholder.jpg");
 			setDescription(mission.sections[0]);
 			setShortDescription(mission.sections[0].description.slice(0,150));
@@ -29,7 +32,9 @@ const MissionCard = ({mission}) => {
 	}, [mission]);
 
 	if (!mounted) {
-		return null;
+		return (
+			<div></div>
+		);
 	};
 
 	return (
@@ -37,22 +42,29 @@ const MissionCard = ({mission}) => {
 			{/*Special line*/}
 			<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
 
-			
-			
-
 			{/*Mission information*/}
-			<div className='relative flex flex-col gap-0'>
+			<div className='relative flex flex-col h-full gap-0'>
+				{/* Profile image */}
+				<a type='button' href={`/profile/${creator.username}`} className='flex absolute drop-shadow-lg/100 z-10 top-5 right-5 group/image cursor-pointer hover:scale-120 rounded-lg w-10 h-10 overflow-hidden bg-neutral-600/50 hover:bg-neutral-500/75 transition duration-300' >
+					{creator.avatar_url ? (
+						<img src={creator.avatar_url} className='rounded-lg' />
+					) : (
+						<User className='w-full h-full rounded-lg'/>
+					)}
+				</a>
+
 				{/*Thumbnail*/}
-				<div className={`w-full aspect-video group-hover:scale-110 transition duration-300 overflow-hidden bg-cover mask-[linear-gradient(to_bottom,black,transparent)]`} style={{ backgroundImage: `url(${thumbnail})`}}></div>
+				<div className={`w-full aspect-video group-hover:scale-110 transition duration-300 overflow-hidden bg-cover mask-[linear-gradient(to_bottom,black,black,transparent)]`} style={{ backgroundImage: `url(${thumbnail})`}}></div>
 				
 				{/*Mission information*/}
-				<div className='relative px-5 py-5'>
-					<h2 className=' uppercase mt-5 text-3xl font-bold'>{mission.title}</h2>
+				<div className='relative px-5 py-5 flex flex-col h-full'>
+					<div className={`flex ${mission.type === "main" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold`}>OPTIONAL MISSION</div>
+					<h2 className=' uppercase mt-5 lg:text-3xl text-2xl font-bold'>{mission.title}</h2>
 					
 					{/*Short briefing*/}
 					<div>
 						<h3 className='text-xl mt-5 font-semibold uppercase tracking-wide'>{description.title}:</h3>
-						<p className=''>{shortDescription}...</p>
+						<div dangerouslySetInnerHTML={{ __html: shortDescription }} className=''/>
 					</div>
 					
 					{/*Other information: Host, map, date, time*/}
@@ -61,20 +73,26 @@ const MissionCard = ({mission}) => {
 						<div className='grid grid-cols-2 mt-2 gap-2 tracking-wide'>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<User />
-								<p className='text-sm'>{mission.host}</p>
+								<p className='text-sm text-zinc-400'>{mission.host}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<MapPin />
-								<p className='text-sm'>{mission.map}</p>
+								<p className='text-sm text-zinc-400'>{mission.map}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Calendar />
-								<p className='text-sm'>{mission.date}</p>
+								<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Clock />
-								<p className='text-sm'>20:00 GMT+1</p>
+								<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
 							</div>
+							{mission.faction && (
+								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
+									<ShieldHalf />
+									<p className='text-sm text-zinc-400'>{mission.faction}</p>
+								</div>
+							)}
 						</div>
 					</div>
 
@@ -94,10 +112,9 @@ const MissionCard = ({mission}) => {
 					)}
 
 					{/*View button*/}
-					<div className='mt-5 flex mx-auto'>
-						<Link href={`/missions/${mission.slug}`} className='mx-20 py-2 w-full rounded-lg text-center bg-red-900 hover:bg-amber-600 transition duration-300 uppercase tracking-wide font-semibold text-lg drop-shadow-red-800'>View details</Link>
+					<div className='mt-auto flex mx-auto w-full'>
+						<Link href={`/missions/${mission.slug}`} className='py-2 w-full rounded-lg text-center bg-red-900 hover:bg-amber-600 transition duration-300 uppercase tracking-wide font-semibold lg:text-lg text-base drop-shadow-red-800'>View details</Link>
 					</div>
-
 				</div>
 			</div>
 		</div>

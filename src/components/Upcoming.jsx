@@ -17,8 +17,8 @@ const Upcoming = ({upcomingMissions}) => {
 	if(!mounted) {
 		return (
 			<section id="upcoming" className='mt-20'>
-				<h2 className='text-4xl uppercase font-bold tracking-wider'>No upcoming missions</h2>
-				<p className='text-neutral-500 text-lg font-semibold'>There are currently no upcoming mission in the near future. Check back later, or tell Bizo to make something.</p>
+				<h2 className='lg:text-4xl text-2xl uppercase font-bold tracking-wider'>No upcoming missions</h2>
+				<p className='text-neutral-500 lg:text-lg text-base font-semibold'>There are currently no upcoming mission in the near future. Check back later, or tell Bizo to make something.</p>
 			</section>
 		);
 	};
@@ -29,15 +29,15 @@ const Upcoming = ({upcomingMissions}) => {
 				<CalendarDays className='w-15 h-15'/>
 
 				<div>
-					<h2 className='text-4xl uppercase font-bold tracking-wider'>Upcoming missions</h2>
-					<p className='text-neutral-500 text-lg font-semibold'>Review mission details for future Friday operations.</p>
+					<h2 className='lg:text-4xl text-2xl uppercase font-bold tracking-wider'>Upcoming missions</h2>
+					<p className='text-neutral-500 lg:text-lg text-base font-semibold'>Review mission details for future Friday operations.</p>
 				</div>
 			</div>
 
 			<FilterBar type={"upcoming"}/>
 
 			{upcomingMissions.length > 0 ? (
-				<div className='mt-10 grid grid-cols-3 gap-5'>
+				<div className='mt-10 grid lg:grid-cols-3 grid-cols-1 gap-5'>
 					{upcomingMissions.map((mission, index) => (
 						<MissionCard key={index} mission={mission}/>
 					))}

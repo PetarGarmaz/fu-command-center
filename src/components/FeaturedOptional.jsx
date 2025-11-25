@@ -34,27 +34,14 @@ const Featured = ({mission}) => {
 
 	if (!mounted) {
 		return (
-			<section id='featured' className='container relative rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 mb-5 mt-32 overflow-hidden'>
-				{/*Special line*/}
-				<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
-
-				<div className='mt-5 mx-auto p-10'>
-					<div className="flex justify-center mb-6">
-						<div className="w-20 h-20 rounded-full bg-black/30 flex items-center justify-center">
-							<Target className="w-10 h-10 text-zinc-400" />
-						</div>
-					</div>
-					<h1 className='text-center text-3xl text-zinc-400 font-semibold uppercase tracking-wide'>No featured missions</h1>
-					<p className='text-center text-lg text-zinc-400 mt-5'>No operations are currently scheduled for this week. Check back soon for new mission briefings, or schedule your own mission.</p>
-				</div>
-			</section>
+			<div></div>
 		);
 	};
 
 	return (
-		<section id='featured' className='relative group rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 hover:bg-red-700/10 mt-32 mb-5 overflow-hidden transition duration-300'>
+		<section id='featured' className='relative group rounded-lg backdrop-blur-lg bg-black/30 border border-cyan-700/30 hover:bg-cyan-500/10 my-5 overflow-hidden transition duration-300'>
 			{/*Special line*/}
-			<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
+			<div className='absolute bg-cyan-500 top-0 left-0 h-1 w-full z-20'></div>
 
 			{/* Profile image */}
 			<a type='button' href={`/profile/${creator.username}`} className='absolute drop-shadow-lg/100  z-10 top-5 right-5 group/image cursor-pointer hover:scale-120 rounded-lg w-10 h-10 overflow-hidden bg-neutral-600/50 hover:bg-neutral-500/75 transition duration-300' >
@@ -67,13 +54,13 @@ const Featured = ({mission}) => {
 
 			<div className='grid lg:grid-cols-3 lg:grid-rows-1 gap-0'>
 				{/*Thumbnail*/}
-				<div className=' overflow-hidden lg:col-span-2 col-span-1'>
+				<div className=' overflow-hidden col-span-1'>
 					<img src={thumbnail} alt="" className='h-full group-hover:scale-110 transition duration-300 object-cover'/>
 				</div>
 
 				{/*Mission information*/}
-				<div className='relative px-5 py-5 col-span'>
-					<div className='flex bg-red-900/20 border w-fit border-red-900 rounded-full px-2 text-red-900 text-sm font-semibold'>FEATURED THIS WEEK</div>
+				<div className='relative px-5 py-5 lg:col-span-2 col-span-1'>
+					<div className={`flex bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold`}>OPTIONAL MISSION</div>
 					<h1 className=' uppercase mt-5 text-2xl tracking-wider font-bold'>{mission.title}</h1>
 					
 					{/*Short briefing*/}
@@ -128,7 +115,7 @@ const Featured = ({mission}) => {
 
 					{/*View button*/}
 					<div className='mt-10 flex mx-auto'>
-						<Link href={`/missions/${mission.slug}`} className='py-3 w-full rounded-lg text-center bg-red-900 hover:bg-amber-600 transition duration-300 uppercase tracking-wide font-bold lg:text-xl text-base'>View details</Link>
+						<Link href={`/missions/${mission.slug}`} className='py-3 w-full rounded-lg text-center bg-cyan-900 hover:bg-cyan-600 transition duration-300 uppercase tracking-wide font-bold lg:text-xl text-base'>View details</Link>
 					</div>
 
 				</div>

@@ -3,9 +3,9 @@ import { makeAutoObservable, runInAction } from 'mobx';
 class FormStore {
 	formData = {
 		title: "",
-		creator: {},
+		creator: null,
 		host: "",
-		type: "Main",
+		type: "main",
 		date: "2025-11-14",
 		map: "",
 		sections: [
@@ -15,7 +15,8 @@ class FormStore {
 		status: "",
 		statusDesc: "",
 		roles: [],
-		attachedMission: {}
+		attachedMission: "",
+		faction: ""
 	};
 
 	isSubmitting = false;
@@ -27,6 +28,10 @@ class FormStore {
 
 	setSubmitSuccess = (state) => {
 		this.submitSuccess = state;
+	}
+
+	setIsSubmitting = (state) => {
+		this.isSubmitting = state;
 	}
 
 	addSection = () => {
@@ -66,19 +71,31 @@ class FormStore {
 			this.setFormData({...this.formData, date: e.target.value});
 		} else if (e.target.id == "terrain") {
 			this.setFormData({...this.formData, map: e.target.value});
+		} else if (e.target.id == "faction") {
+			this.setFormData({...this.formData, faction: e.target.value});
+		} else if (e.target.id == "type") {
+			this.setFormData({...this.formData, type: e.target.value});
+		} else if (e.target.id == "attachment") {
+			this.setFormData({...this.formData, attachedMission: e.target.value});
 		};
 	}
 
-	handleBriefingChange = (e, idx) => {
-		if(e.target.id == "briefing_title") {
+	handleImageUpload = (file, removeImage) => {
+		if(removeImage) {
+			this.setFormData({...this.formData, image: ""});
+		} else {
+			this.setFormData({...this.formData, image: file[0]});
+		}
+	}
+
+	handleBriefingChange = (e, isTitle, idx) => {
+		if(isTitle) {
 			this.setFormData({...this.formData, sections: this.formData.sections.map((section, index) =>
 				index === idx ? { ...section, title: e.target.value } : section),
 			})
-		}
-
-		if(e.target.id == "briefing_desc") {
+		} else {
 			this.setFormData({...this.formData, sections: this.formData.sections.map((section, index) =>
-				index === idx ? { ...section, description: e.target.value } : section),
+				index === idx ? { ...section, description: e } : section),
 			})
 		}
 	}

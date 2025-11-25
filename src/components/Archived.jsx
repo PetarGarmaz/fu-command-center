@@ -17,8 +17,8 @@ const Archived = ({archivedMissions}) => {
 	if(!mounted) {
 		return (
 			<section id="archived" className='mt-20'>
-				<h2 className='text-4xl uppercase font-bold tracking-wider'>No archived missions</h2>
-				<p className='text-neutral-500 text-lg font-semibold'>There are currently no archived missions.</p>
+				<h2 className='lg:text-4xl text-2xl uppercase font-bold tracking-wider'>No archived missions</h2>
+				<p className='text-neutral-500 lg:text-lg text-base font-semibold'>There are currently no archived missions.</p>
 			</section>
 		);
 	};
@@ -29,8 +29,8 @@ const Archived = ({archivedMissions}) => {
 				<Archive className='w-15 h-15'/>
 
 				<div>
-					<h2 className='text-4xl uppercase font-bold tracking-wider'>Archived missions</h2>
-					<p className='text-neutral-500 text-lg font-semibold'>Review mission details for archived missions that were already played.</p>
+					<h2 className='lg:text-4xl text-2xl uppercase font-bold tracking-wider'>Archived missions</h2>
+					<p className='text-neutral-500 lg:text-lg text-base font-semibold'>Review mission details for archived missions that were already played.</p>
 				</div>
 			</div>
 

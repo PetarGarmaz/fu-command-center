@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import {roleData} from "@/utilities/roles.js"
-import { Calendar, Clock, MapPin, User, CheckCircle, XCircle, ChevronRight, ShieldHalf} from 'lucide-react';
+import { Calendar, Clock, MapPin, User, CheckCircle, XCircle, ChevronRight, FilePen, CheckCircle2, ShieldHalf} from 'lucide-react';
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
 
-const ArchiveCard = ({mission}) => {
+const ProfileCard = ({mission}) => {
 	const [creator, setCreator] = useState();
 	const [description, setDescription] = useState();
 	const [shortDescription, setShortDescription] = useState();
 	const [missionRoles, setMissionRoles] = useState();
 	const [mounted, setMounted] = useState(false);
-
+	const [status, setStatus] = useState("");
 
 	useEffect(() => {
 		if(mission) {
@@ -37,23 +37,12 @@ const ArchiveCard = ({mission}) => {
 	};
 
 	return (
-		<div className={`relative rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border overflow-hidden transition duration-300 ${mission.status.includes("fail") ? "border-red-900/30 hover:from-red-600/10 hover:to-red-900/10" : "border-emerald-900/30 hover:from-emerald-600/10 hover:to-emerald-900/10"}`}>
+		<div className="relative rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border overflow-hidden transition duration-300 border-red-900/30 hover:from-red-600/10 hover:to-red-900/10" >
 
 			{/*Mission information*/}
-			<div className='grid lg:grid-cols-4 grid-cols-1'>
-				{/* Profile image */}
-				<a type='button' href={`/profile/${creator.username}`} className='absolute drop-shadow-lg/100 z-10 top-5 right-5 group/image cursor-pointer hover:scale-120 rounded-lg w-10 h-10 overflow-hidden bg-neutral-600/50 hover:bg-neutral-500/75 transition duration-300' >
-					{creator.avatar_url ? (
-						<img src={creator.avatar_url} className='rounded-lg' />
-					) : (
-						<User className='w-full h-full rounded-lg'/>
-					)}
-				</a>
-
+			<div className='relative grid lg:grid-cols-4 grid-cols-1'>
 				{/*Mission information*/}
 				<div className='relative lg:col-span-3 px-5 py-5'>
-					<div className={`flex ${mission.type === "main" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold mb-5`}>OPTIONAL MISSION</div>
-
 					<div className='flex items-center gap-5'>
 						{mission.status.includes("fail") ? (
 							<XCircle className=''/>
@@ -68,12 +57,7 @@ const ArchiveCard = ({mission}) => {
 						<h3 className='lg:text-xl text-lg mt-5 font-semibold uppercase tracking-wide'>{description.title}:</h3>
 						<div dangerouslySetInnerHTML={{ __html: shortDescription }} className=''/>
 					</div>
-					
-					{/*Short status*/}
-					<div className={`flex mt-5 gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md text-lg p-3 ${mission.status.includes("fail") ? "text-red-500 " : "text-emerald-500"}`}>
-						<p>{mission.statusDesc !== "" ? mission.statusDesc : "Mission success!"}</p>
-					</div>
-					
+										
 					{/*Other information: Host, map, date, time*/}
 					<div className='mt-5 grid grid-cols-2 lg:flex gap-5'>
 						<div className='flex gap-2'>
@@ -117,12 +101,16 @@ const ArchiveCard = ({mission}) => {
 				</div>
 
 				{/*View button*/}
-				<div className='flex my-5 items-center xl:mx-10 place-self-center'>
-					<Link href={`/missions/${mission.slug}`} className={`flex items-center py-2 px-10 w-full rounded-lg text-center bg-neutral-800/50 border transition duration-300 tracking-wide font-semibold text-lg  ${mission.status.includes("fail") ? "border-red-800/30 hover:bg-red-600/20" : "border-emerald-800/30 hover:bg-emerald-600/20"}`}>View details <ChevronRight className="w-4 h-4 ml-2" /></Link>
+				<div className='flex flex-col gap-5 my-5 items-center xl:mx-10 place-self-center'>
+					<a href={`/missions/${mission.slug}`} className={`flex items-center py-2 px-10 w-full rounded-lg text-center bg-neutral-800/50 border transition duration-300 tracking-wide font-semibold text-lg  ${mission.status.includes("fail") ? "border-red-800/30 hover:bg-red-600/20" : "border-emerald-800/30 hover:bg-emerald-600/20"}`}>View details <ChevronRight className="w-4 h-4 ml-2" /></a>
+					<a href={`/missions/${mission.slug}`} className={`flex items-center py-2 px-10 w-full rounded-lg text-center bg-neutral-800/50 border transition duration-300 tracking-wide font-semibold text-lg  ${mission.status.includes("fail") ? "border-red-800/30 hover:bg-red-600/20" : "border-emerald-800/30 hover:bg-emerald-600/20"}`}>Edit mission <FilePen className="w-4 h-4 ml-2" /></a>
+					<a href={`/missions/${mission.slug}`} className={`flex items-center py-2 px-10 w-full rounded-lg text-center bg-neutral-800/50 border transition duration-300 tracking-wide font-semibold text-lg  ${mission.status.includes("fail") ? "border-red-800/30 hover:bg-red-600/20" : "border-emerald-800/30 hover:bg-emerald-600/20"}`}>Change status <CheckCircle2 className="w-4 h-4 ml-2" /></a>
 				</div>
 			</div>
+
+			
 		</div>
 	)
 }
 
-export default ArchiveCard
+export default ProfileCard
