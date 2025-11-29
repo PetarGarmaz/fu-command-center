@@ -12,11 +12,12 @@ class FormStore {
 			{ title: "Situation", description: "" }
 		],
 		image: "",
-		status: "",
+		status: false,
 		statusDesc: "",
 		roles: [],
 		attachedMission: "",
-		faction: ""
+		faction: "",
+		isPosted: false
 	};
 
 	isSubmitting = false;
@@ -113,7 +114,6 @@ class FormStore {
 			})
 		}
 	}
-
 };
 
 export const formStore = new FormStore();

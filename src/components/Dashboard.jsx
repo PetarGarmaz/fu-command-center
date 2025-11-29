@@ -5,7 +5,6 @@ import Upcoming from '@/components/Upcoming'
 import Archived from '@/components/Archived'
 import { missionStore } from '@/stores/missionStore'
 
-
 const Dashboard = () => {
 	return (
 		<div className='fade-opacity container mx-auto px-5 py-10'>

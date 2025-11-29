@@ -130,7 +130,7 @@ const NewMission = ({type, slug}) => {
 							{ title: "Situation", description: "" }
 						],
 						image: "",
-						status: "",
+						status: false,
 						statusDesc: "",
 						roles: [],
 						attachedMission: "",
@@ -155,7 +155,7 @@ const NewMission = ({type, slug}) => {
 							{ title: "Situation", description: "" }
 						],
 						image: "",
-						status: "",
+						status: false,
 						statusDesc: "",
 						roles: [],
 						attachedMission: "",

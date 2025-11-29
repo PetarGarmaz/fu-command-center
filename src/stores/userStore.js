@@ -11,6 +11,7 @@ class UserStore {
 	isMember = false;
 
 	loading = false;
+	loaded = true;
 
 	constructor() {
 		makeAutoObservable(this);
@@ -43,6 +44,8 @@ class UserStore {
 			console.log(this.currentUser);
 			this.addUser(user);
 		};
+
+		this.loaded = true;
 	}
 
 	signInWithDiscord = async () => {

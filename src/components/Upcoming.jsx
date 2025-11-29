@@ -12,7 +12,7 @@ const Upcoming = ({upcomingMissions}) => {
 		if(upcomingMissions.length > 0) {
 			setMounted(true);
 		}
-	}, [upcomingMissions]);
+	}, [upcomingMissions.length]);
 
 	if(!mounted) {
 		return (

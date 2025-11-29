@@ -1,6 +1,7 @@
 import { makeAutoObservable, runInAction } from 'mobx';
 import { supabase } from "@/utilities/supabaseClient";
 import { roleData } from "@/utilities/roles.js";
+import html2md from "html-to-md";
 
 class MissionStore {
 	missions = [];
@@ -99,9 +100,25 @@ class MissionStore {
 		return false;
 	}
 
+	async editMissionStatus(id, missionData, outcome, status) {
+		const index = this.missions.findIndex(mission => mission.id === id);
+		const newMission = {...missionData, status: outcome, statusDesc: status};
+
+		if (index !== -1) {
+			this.missions[index] = { ...this.missions[index], ...newMission};
+			const { error } = await supabase.from('missions').update(this.missions[index]).eq('id', id);
+
+			return true;
+		}
+
+		return false;
+	}
+
 	async deleteMission(id) {
 		this.missions = this.missions.filter(mission => mission.id !== id);
 		const response = await supabase.from('missions').delete().eq('id', id);
+
+		this.loadMissions();
 	}
 
 	getFeaturedMission() {
@@ -112,6 +129,7 @@ class MissionStore {
 		if(upcoming.length > 0) {
 			const upcomingMain = upcoming.find(m => m.type === "main");
 			const upcomingOptional = upcoming.find(m => m.type !== "main");
+			console.log(upcomingOptional);
 
 			const futureDate = new Date();
 			futureDate.setHours(0, 0, 0, 0);
@@ -152,9 +170,7 @@ class MissionStore {
 		futureDate.setDate(futureDate.getDate() + 7);
 
 		const upcoming = this.filteredUpcomingMissions.filter(m => new Date(m.date) > futureDate).sort((a, b) => new Date(a.date) - new Date(b.date));
-		this.upcomingMissions = upcoming;
-
-		console.log(upcoming);	
+		this.upcomingMissions = upcoming;	
 	}
 
 	getProfileMissions() {
@@ -165,7 +181,7 @@ class MissionStore {
 		futureDate.setHours(0, 0, 0, 0);
 		futureDate.setDate(futureDate.getDate() + 7);
 
-		const myMissions = this.filteredProfileMissions.filter(m => m.creator == this.currentProfile?.id).sort((a, b) => new Date(a.date) - new Date(b.date));
+		const myMissions = this.filteredProfileMissions.filter(m => m.creator == this.currentProfile?.id).sort((a, b) => new Date(b.date) - new Date(a.date));
 		this.profileMissions = myMissions;	
 	}
 
@@ -328,6 +344,70 @@ class MissionStore {
 
 	setAllCreators = () => {
 		this.allCreators = this.missions.map(mission => mission.creator);
+	}
+
+	handleDiscordMessage = async (data) => {
+		try {
+			const timestamp = new Date(data.date).getTime() / 1000;
+			const title = `***${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${timestamp}:F>***`;
+			const pingRole = "<@&791754189592199210>";
+			const separator = "\n\n"
+			let description = "";
+			let roles = "# Attendance:\nReact with <:Yes:533938287908356096> if you'll make it on time for the OP.\nReact with ❓ if you're not sure if you'll make it.\nReact with <:No:533938399594151936> if you won't be able to make it.\n\n# Roles:\nReact with 👑 if you want to be a SL.\nReact with 🐔 if you want to be a PL.\n";
+
+			data.sections.forEach(element => {
+				const markdown = html2md(element.description);
+				description += "# " + element.title + ":\n";
+				description += markdown + "\n\n";
+			});
+
+			data.roles.forEach(element => {
+				const roleID = Object.values(roleData).find(role => role.key == element.name).id;
+				roles += `React with <:a3_${element.name}:${roleID}> for a ${element.name} role. [${element.slots} ${element.slots > 1 ? "Slots" : "Slot"}]`;
+			});
+
+			let embeds = [
+				{
+					"description": title + separator + description + "\n" + roles + separator,
+					"color": 16711680,
+					"image": {"url": `${data.image ? data.image : ""}`}
+				}
+			];
+
+			const message = {
+				"content": pingRole + separator,
+				"embeds": embeds,
+				"attachments": []
+			};
+
+			await fetch("https://discord.com/api/webhooks/1308822894289227848/HNlOl_RzQbMxBJvz8Rrofk6poiFQgA1aVrDbKIx0lIPhiODUMexs5_q2a6RnweKzhVXJ", {
+				headers: {
+					"Content-Type": "application/json",
+				},
+				method: "POST",
+				body: JSON.stringify(message),
+			});
+
+			//Save mission isPosted
+			const index = this.missions.findIndex(mission => mission.id === data.id);
+			const newMission = {...data, isPosted: true};
+
+			if (index !== -1) {
+				this.missions[index] = { ...this.missions[index], ...newMission};
+				const { error } = await supabase.from('missions').update(this.missions[index]).eq('id', data.id);
+
+				runInAction(() => {
+					this.missions[index].isPosted = true;
+					this.loadMissions();
+				});
+
+				return true;
+			}
+
+			return false;
+		} catch (error) {
+			console.log(error);
+		}
 	}
 }
 

@@ -3,6 +3,7 @@ import {roleData} from "@/utilities/roles.js"
 import { Calendar, Clock, MapPin, User, Target, ShieldHalf} from 'lucide-react';
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
+import MissionOptions from '@/components/MissionOptions'
 
 const Featured = ({mission}) => {
 	const [creator, setCreator] = useState();
@@ -43,15 +44,6 @@ const Featured = ({mission}) => {
 			{/*Special line*/}
 			<div className='absolute bg-cyan-500 top-0 left-0 h-1 w-full z-20'></div>
 
-			{/* Profile image */}
-			<a type='button' href={`/profile/${creator.username}`} className='absolute drop-shadow-lg/100  z-10 top-5 right-5 group/image cursor-pointer hover:scale-120 rounded-lg w-10 h-10 overflow-hidden bg-neutral-600/50 hover:bg-neutral-500/75 transition duration-300' >
-				{creator.avatar_url ? (
-					<img src={creator.avatar_url} className='rounded-lg' />
-				) : (
-					<User className='w-full h-full rounded-lg'/>
-				)}
-			</a>
-
 			<div className='grid lg:grid-cols-3 lg:grid-rows-1 gap-0'>
 				{/*Thumbnail*/}
 				<div className=' overflow-hidden col-span-1'>
@@ -61,7 +53,10 @@ const Featured = ({mission}) => {
 				{/*Mission information*/}
 				<div className='relative px-5 py-5 lg:col-span-2 col-span-1'>
 					<div className={`flex bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold`}>OPTIONAL MISSION</div>
-					<h1 className=' uppercase mt-5 text-2xl tracking-wider font-bold'>{mission.title}</h1>
+					<div className='flex items-start justify-between gap-5'>
+						<h1 className=' uppercase mt-5 text-2xl tracking-wider font-bold'>{mission.title}</h1>
+						<MissionOptions mission={mission}/>
+					</div>
 					
 					{/*Short briefing*/}
 					<div className='mt-5'>

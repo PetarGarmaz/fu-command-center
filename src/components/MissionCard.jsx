@@ -3,6 +3,7 @@ import {roleData} from "@/utilities/roles.js"
 import { Calendar, Clock, MapPin, User, ShieldHalf } from 'lucide-react';
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
+import MissionOptions from '@/components/MissionOptions'
 
 const MissionCard = ({mission}) => {
 	const [creator, setCreator] = useState();
@@ -44,22 +45,17 @@ const MissionCard = ({mission}) => {
 
 			{/*Mission information*/}
 			<div className='relative flex flex-col h-full gap-0'>
-				{/* Profile image */}
-				<a type='button' href={`/profile/${creator.username}`} className='flex absolute drop-shadow-lg/100 z-10 top-5 right-5 group/image cursor-pointer hover:scale-120 rounded-lg w-10 h-10 overflow-hidden bg-neutral-600/50 hover:bg-neutral-500/75 transition duration-300' >
-					{creator.avatar_url ? (
-						<img src={creator.avatar_url} className='rounded-lg' />
-					) : (
-						<User className='w-full h-full rounded-lg'/>
-					)}
-				</a>
-
 				{/*Thumbnail*/}
 				<div className={`w-full aspect-video group-hover:scale-110 transition duration-300 overflow-hidden bg-cover mask-[linear-gradient(to_bottom,black,black,transparent)]`} style={{ backgroundImage: `url(${thumbnail})`}}></div>
 				
 				{/*Mission information*/}
 				<div className='relative px-5 py-5 flex flex-col h-full'>
-					<div className={`flex ${mission.type === "main" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold`}>OPTIONAL MISSION</div>
-					<h2 className=' uppercase mt-5 lg:text-3xl text-2xl font-bold'>{mission.title}</h2>
+					<div className={`flex ${mission.type === "main" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold mb-5`}>OPTIONAL MISSION</div>
+					
+					<div className='flex items-start justify-between gap-5'>
+						<h2 className='uppercase lg:text-3xl text-xl font-bold'>{mission.title}</h2>
+						<MissionOptions mission={mission}/>
+					</div>
 					
 					{/*Short briefing*/}
 					<div>

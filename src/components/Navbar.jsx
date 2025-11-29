@@ -174,7 +174,7 @@ const Navbar = () => {
 										<FileText className='w-8 h-8 place-self-center text-amber-400'/>
 										<div className='flex flex-col place-self-center gap-1'>
 											<p className='uppercase text-neutral-400 text-sm tracking-wider'>Missions created</p>
-											<p className='capitalize tracking-wider'>{missionStore.profileMissions.length}</p>
+											<p className='capitalize tracking-wider'>{userStore.createdMissions}</p>
 										</div>
 									</div>
 								</div>

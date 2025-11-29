@@ -17,6 +17,8 @@ const Profile = ({slug}) => {
 
 	// EFFECT 1 — Load the mission when user found
 	useEffect(() => {
+		if (!userStore.loaded) return;
+
 		const foundUser = userStore.allUsers.find(u => u.username == slug);
 		if (foundUser) {
 			missionStore.setCurrentProfile(foundUser)
@@ -30,7 +32,7 @@ const Profile = ({slug}) => {
 		missionStore.getProfileMissions();
 		const timer = setTimeout(() => setMounted(true), 500);
 		return () => clearTimeout(timer);
-	}, [missionStore.currentProfile]);
+	}, [missionStore.currentProfile, missionStore.missions.length]);
 
 	if(!mounted) {
 		return (
@@ -76,7 +78,7 @@ const Profile = ({slug}) => {
 
 			{missionStore.profileMissions.length > 0 ? (
 				<>
-					<div className='grid grid-cols-2 gap-5 mb-10'>
+					<div className='grid lg:grid-cols-2 grid-cols-1 gap-5 mb-10'>
 						<div className='flex bg-neutral-800 border border-neutral-600 rounded-lg px-5 py-2 gap-5'>
 							<ShieldUser className='w-8 h-8 place-self-center text-blue-400'/>
 							<div className='flex flex-col place-self-center gap-1'>

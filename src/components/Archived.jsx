@@ -12,7 +12,7 @@ const Archived = ({archivedMissions}) => {
 		if(archivedMissions.length > 0) {
 			setMounted(true);
 		}
-	}, [archivedMissions]);
+	}, [archivedMissions.length]);
 
 	if(!mounted) {
 		return (
