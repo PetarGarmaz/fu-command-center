@@ -55,7 +55,7 @@ const MissionOptions = ({mission}) => {
 
 			{/*Mission options*/}
 			{menu && (
-				<div type='button' className='absolute right-0 top-full w-60 rounded-lg overflow-hidden bg-linear-to-b from-neutral-800 to-neutral-900 transition duration-300' >
+				<div className='absolute right-0 top-full w-60 rounded-lg overflow-hidden bg-linear-to-b from-neutral-800 to-neutral-900 transition duration-300 z-50' >
 					<div className='p-3 space-y-3 w-full'>
 						<a href={`/profile/${creator.username}`} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><User className="w-6 h-6 mr-2" /> View profile (<span className='capitalize'>{creator.username}</span>)</a>
 						<button type='button' onClick={() => setStatusMenu(true)} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><CheckCircle2 className="w-6 h-6 mr-2" /> Change status</button>

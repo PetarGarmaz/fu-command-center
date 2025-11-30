@@ -39,7 +39,7 @@ const ArchiveCard = ({mission}) => {
 	};
 
 	return (
-		<div className={`relative rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border overflow-hidden transition duration-300 ${!mission.status ? "border-red-900/30 hover:from-red-600/10 hover:to-red-900/10" : "border-emerald-900/30 hover:from-emerald-600/10 hover:to-emerald-900/10"}`}>
+		<div className={`relative rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border transition duration-300 ${!mission.status ? "border-red-900/30 hover:from-red-600/10 hover:to-red-900/10" : "border-emerald-900/30 hover:from-emerald-600/10 hover:to-emerald-900/10"}`}>
 			
 			{/*Mission information*/}
 			<div className='relative px-5 py-5'>

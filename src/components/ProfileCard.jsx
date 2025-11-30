@@ -38,7 +38,7 @@ const ProfileCard = ({mission}) => {
 	};
 
 	return (
-		<div className="rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border overflow-hidden transition duration-300 border-neutral-800/30 hover:from-red-600/10 hover:to-red-900/10 hover:border-red-800/30" >
+		<div className="rounded-lg backdrop-blur-lg bg-linear-to-b from-neutral-800/60 to-neutral-950/60 border transition duration-300 border-neutral-800/30 hover:from-red-600/10 hover:to-red-900/10 hover:border-red-800/30" >
 			
 			{/*Mission information*/}
 			<div className='relative px-5 py-5 '>
