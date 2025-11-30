@@ -7,14 +7,15 @@ export async function generateMetadata({ params }) {
 	const { data, error } = await supabase.from("missions").select("*");
 	const post = data.find(mission => mission.slug === slug);
 
+	const title = "FUCC Mission Briefing - " + post?.title;
 	const description = html2md(post?.sections[0].description);
-	const shortDescription = description.slice(0, 250);
+	const shortDescription = description.slice(0, 125);
 
 	return {
-		title: post?.title,
+		title: title,
 		description: shortDescription,
 		openGraph: {
-			title: post?.title,
+			title: title,
 			description: shortDescription,
 			url: `https://fu-command-center.vercel.app/missions/${slug}`,
 			images: [
