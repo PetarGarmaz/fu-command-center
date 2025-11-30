@@ -14,7 +14,27 @@ const geistMono = Geist_Mono({
 export const metadata = {
 	title: "FUCC - FU Command Center",
 	description: "View, search and schedule mission briefings for Freelancers Union Arma Division.",
-};
+	openGraph: {
+		title: "FUCC - FU Command Center",
+		description: "View, search and schedule mission briefings for Freelancers Union Arma Division.",
+		url: "https://fu-command-center.vercel.app",
+		siteName: "FUCC",
+		images: [
+		{
+			url: "https://fu-command-center.vercel.app/placeholder_img.jpg",
+			width: 1200,
+			height: 630,
+		},
+		],
+		type: "website",
+	},
+	twitter: {
+		card: "summary_large_image",
+		title: "FUCC - FU Command Center",
+		description: "View, search and schedule mission briefings.",
+		images: ["https://fu-command-center.vercel.app/placeholder_img.jpg"],
+	},
+	};
 
 export default function RootLayout({ children }) {
 	return (

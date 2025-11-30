@@ -1,5 +1,27 @@
 import Mission from '@/components/Mission'
 
+export async function generateMetadata({ params }) {
+	const post = await await supabase.from("missions").select("*").find(mission => mission.slug == params.slug);
+
+	return {
+		title: post.title,
+		description: post.sections[0].description,
+		openGraph: {
+			title: post.title,
+			description: post.sections[0].description,
+			url: `https://fu-command-center.vercel.app/missions/${params.slug}`,
+			images: [
+				{
+					url: post.image ?? "https://fu-command-center.vercel.app/fu_placeholder.jpg",
+					width: 1200,
+					height: 630,
+				},
+			],
+			type: "article",
+		},
+	};
+}
+
 const MissionPage = async({params}) => {
 	const {slug} = await params;
 
