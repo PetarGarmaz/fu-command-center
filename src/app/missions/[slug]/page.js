@@ -1,4 +1,5 @@
 import Mission from '@/components/Mission'
+import { supabase } from "@/utilities/supabaseClient";
 
 export async function generateMetadata({ params }) {
 	const post = await await supabase.from("missions").select("*").find(mission => mission.slug == params.slug);
