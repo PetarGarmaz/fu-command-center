@@ -1,17 +1,21 @@
 import Mission from '@/components/Mission'
 import { supabase } from "@/utilities/supabaseClient";
+import html2md from "html-to-md";
 
 export async function generateMetadata({ params }) {
 	const { slug } = await params;
 	const { data, error } = await supabase.from("missions").select("*");
 	const post = data.find(mission => mission.slug === slug);
 
+	const description = html2md(post?.sections[0].description);
+	const shortDescription = description.slice(0, 250);
+
 	return {
 		title: post?.title,
-		description: post?.sections[0].description,
+		description: shortDescription,
 		openGraph: {
 			title: post?.title,
-			description: post?.sections[0].description,
+			description: shortDescription,
 			url: `https://fu-command-center.vercel.app/missions/${slug}`,
 			images: [
 				{
@@ -20,7 +24,7 @@ export async function generateMetadata({ params }) {
 					height: 630,
 				},
 			],
-			type: "article",
+			type: "website",
 		},
 	};
 }
