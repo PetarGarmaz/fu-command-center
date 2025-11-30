@@ -59,7 +59,7 @@ const MissionOptions = ({mission}) => {
 					<div className='p-3 space-y-3 w-full'>
 						<a href={`/profile/${creator.username}`} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><User className="w-6 h-6 mr-2" /> View profile (<span className='capitalize'>{creator.username}</span>)</a>
 						<button type='button' onClick={() => setStatusMenu(true)} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><CheckCircle2 className="w-6 h-6 mr-2" /> Change status</button>
-						<a href={`/missions/${mission.slug}`} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><FilePen className="w-6 h-6 mr-2" /> Edit mission</a>
+						<a href={`/edit-mission/${mission.slug}`} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide hover:bg-neutral-700`}><FilePen className="w-6 h-6 mr-2" /> Edit mission</a>
 						<button type='button' onClick={handleDelete} className={`flex items-center w-full p-2 rounded-lg transition duration-300 tracking-wide bg-red-900/30 hover:bg-red-900`}><Trash className="w-6 h-6 mr-2" /> Remove mission</button>
 						<hr />
 						
