@@ -70,28 +70,28 @@ const MissionCard = ({mission}) => {
 						<h3 className='text-xl font-semibold uppercase tracking-wide'>INFORMATION:</h3>
 						<div className='grid lg:grid-cols-2 grid-cols-1 mt-2 gap-2 tracking-wide'>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<User />
+								<User className='shrink-0' />
 								<p className='text-sm text-zinc-400'>{mission.host}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<MapPin />
+								<MapPin className='shrink-0' />
 								<p className='text-sm text-zinc-400'>{mission.map}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<Calendar />
+								<Calendar className='shrink-0' />
 								<ClientOnly>
 									<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
 								</ClientOnly>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<Clock />
+								<Clock className='shrink-0' />
 								<ClientOnly>
 									<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
 								</ClientOnly>
 							</div>
 							{mission.faction && (
 								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-									<ShieldHalf />
+									<ShieldHalf className='shrink-0' />
 									<p className='text-sm text-zinc-400'>{mission.faction}</p>
 								</div>
 							)}

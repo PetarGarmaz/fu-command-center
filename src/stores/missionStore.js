@@ -87,9 +87,8 @@ class MissionStore {
 
 	async editMission(id, missionData, creator, processedImage, date) {
 		const index = this.missions.findIndex(mission => mission.id === id);
-		const newSlug = missionData.title ? this.generateSlug(missionData.title + "-" + missionData.date) : this.missions[index].slug;
 
-		const newMission = {...missionData, slug: newSlug, creator: creator.id, image: processedImage, date: date};
+		const newMission = {...missionData, creator: creator.id, image: processedImage, date: date};
 
 		if (index !== -1) {
 			this.missions[index] = { ...this.missions[index], ...newMission};

@@ -85,28 +85,28 @@ const Featured = ({mission}) => {
 						<h2 className='text-xl font-semibold uppercase tracking-wide'>INFORMATION:</h2>
 						<div className='grid grid-cols-2 mt-2 gap-2 tracking-wide'>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<User className=' place-self-center'/>
+								<User className='shrink-0 place-self-center'/>
 								<p className='text-zinc-400'>{mission.host}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<MapPin className=' place-self-center'/>
+								<MapPin className='shrink-0 place-self-center'/>
 								<p className='text-zinc-400'>{mission.map}</p>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<Calendar className='place-self-center'/>
+								<Calendar className='shrink-0 place-self-center'/>
 								<ClientOnly>
 									<p className='text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
 								</ClientOnly>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-								<Clock className=' place-self-center'/>
+								<Clock className='shrink-0 place-self-center'/>
 								<ClientOnly>
 									<p className='text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
 								</ClientOnly>
 							</div>
 							{mission.faction && (
 								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
-									<ShieldHalf className=' place-self-center'/>
+									<ShieldHalf className='shrink-0 place-self-center'/>
 									<p className='text-zinc-400'>{mission.faction}</p>
 								</div>
 							)}
