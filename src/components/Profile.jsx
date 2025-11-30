@@ -35,9 +35,7 @@ const Profile = ({slug}) => {
 	}, [missionStore.currentProfile, missionStore.missions.length]);
 
 	if(!mounted) {
-		return (
-			<div></div>
-		);
+		return null
 	};
 
 	if(!missionStore.currentProfile) {

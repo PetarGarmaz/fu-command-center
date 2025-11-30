@@ -4,6 +4,7 @@ import { Calendar, Clock, MapPin, User, Target, ShieldHalf} from 'lucide-react';
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
 import MissionOptions from '@/components/MissionOptions'
+import ClientOnly from "@/components/ClientOnly";
 
 const Featured = ({mission}) => {
 	const [creator, setCreator] = useState();
@@ -93,11 +94,15 @@ const Featured = ({mission}) => {
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Calendar className='place-self-center'/>
-								<p className='text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								<ClientOnly>
+									<p className='text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								</ClientOnly>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Clock className=' place-self-center'/>
-								<p className='text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								<ClientOnly>
+									<p className='text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								</ClientOnly>
 							</div>
 							{mission.faction && (
 								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>

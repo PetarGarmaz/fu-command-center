@@ -5,7 +5,6 @@ import { observer } from 'mobx-react-lite'
 import { useState, useEffect } from 'react'
 import { Menu, LogOut, LogIn, X, FileText, ShieldUser } from 'lucide-react';
 import { userStore } from '@/stores/userStore'
-import { missionStore } from '@/stores/missionStore';
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -20,12 +19,10 @@ const Navbar = () => {
 
 	useEffect(() => {
 		setMounted(true);	
-	}, []);
+	}, [userStore.allUsers.length, userStore.loaded]);
 
 	if(!mounted) {
-		return (
-			<div></div>
-		);
+		return null
 	};
 
 	return (

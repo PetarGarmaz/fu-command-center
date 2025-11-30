@@ -8,6 +8,7 @@ import { formStore } from '@/stores/formStore'
 import { userStore } from '@/stores/userStore'
 import { supabase } from "@/utilities/supabaseClient";
 import RichTextEditor from '@/components/TextEditor';
+import ClientOnly from "@/components/ClientOnly";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -178,7 +179,6 @@ const NewMission = ({type, slug}) => {
 			if(missionData) {
 				formStore.setFormData({...formStore.formData, 
 					title: missionData.title,
-					creator: missionData.creator,
 					host: missionData.host,
 					type: missionData.type,
 					date: missionData.date,
@@ -228,8 +228,8 @@ const NewMission = ({type, slug}) => {
 
 	if(formStore.submitSuccess) {
 		return (
-			<div className='fade-opacity container mx-auto py-20 px-40'>
-				<section className='relative py-10 rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden'>
+			<div className='fade-opacity container mx-auto py-20 lg:px-40 px-10 max-sm:px-5'>
+				<section className='relative py-10 px-5 rounded-lg backdrop-blur-lg bg-black/30 border border-red-900/30 my-5 overflow-hidden'>
 					{/*Special line*/}
 					<div className='absolute bg-linear-to-r top-0 left-0 h-1 w-full from-red-900 via-amber-800 to-red-900 z-20'></div>
 
@@ -242,7 +242,7 @@ const NewMission = ({type, slug}) => {
 						<h1 className='text-center text-3xl text-zinc-400 font-semibold uppercase tracking-wide'>MISSION {type == "edit" ? "EDITED" : "CREATED"}</h1>
 						<p className='text-center text-lg text-zinc-400 mt-5'>You've successfully scheduled a mission.</p>
 
-						<div className='grid grid-cols-2 gap-10 mx-10 mt-10'>
+						<div className='grid lg:grid-cols-2 grid-cols-1 gap-10 mx-10 mt-10'>
 							<button type='button' onClick={() => formStore.setSubmitSuccess(false)} className='bg-red-800/50 hover:bg-neutral-800/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>New Mission</button>
 							<a href='/' className='text-center bg-neutral-700/50 hover:bg-neutral-500/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Back to Dashboard</a>
 						</div>
@@ -273,64 +273,75 @@ const NewMission = ({type, slug}) => {
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission details</h2>
 
 					<div className='mt-10 grid lg:grid-cols-2 grid-cols-1 gap-10'>
+						{/* OPERATION NAME */}
 						<div className='flex flex-col lg:col-span-2 gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Operation Name *</label>
-							<input type="text" required id="title" name="title" value={formStore.formData.title} onChange={(e) => formStore.handleInputChange(e)} placeholder='Operation: Emerald, Operation: D-Day, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+							<input type="text" required id="title" name="title" value={formStore.formData.title} onChange={(e) => formStore.handleInputChange(e)} placeholder='Operation: Emerald, Operation: D-Day, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 						</div>
 
+						{/* HOST */}
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Host *</label>
-							<input type="text" required id="host" name="host" value={formStore.formData.host} onChange={(e) => formStore.handleInputChange(e)} placeholder='Warlord Beezo, Sajfert, Slobodan Beast, Nameless Novichok, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+							<input type="text" required id="host" name="host" value={formStore.formData.host} onChange={(e) => formStore.handleInputChange(e)} placeholder='Warlord Beezo, Sajfert, Slobodan Beast, Nameless Novichok, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 						</div>
 
+						{/* TYPE */}
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Mission type *</label>
-							<select type="select" id="type" name="type" value={formStore.formData.type} onChange={formStore.handleInputChange} className=' bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white text-lg focus:outline-none'>
+							<select type="select" id="type" name="type" value={formStore.formData.type} onChange={formStore.handleInputChange} className=' bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white lg:text-lg focus:outline-none'>
 								<option value="main">Main</option>
 								<option value="optional">Optional</option>
 							</select>
 						</div>
 
+						{/* DATE */}
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Date *</label>
-							<DatePicker required showTimeSelect timeFormat="HH:mm" dateFormat="EEEE, MMMM d, yyyy HH:mm" timeIntervals={30} timeInputLabel="Time" selected={selectedDate} onChange={(date) => setSelectedDate(date)} minDate={new Date()} maxDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))} filterDate={isDateAvailable} id="date" name="date" className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg w-full'/>
+							<ClientOnly>
+								<DatePicker required showTimeSelect timeFormat="HH:mm" dateFormat="EEEE, MMMM d, yyyy HH:mm" timeIntervals={30} timeInputLabel="Time" selected={selectedDate} onChange={(date) => setSelectedDate(date)} minDate={new Date()} maxDate={new Date(new Date().setFullYear(new Date().getFullYear() + 1))} filterDate={isDateAvailable} id="date" name="date" className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg w-full'/>
+							
+							</ClientOnly>
 						</div>
 
 						{/* Empty div to split up required from non required */}
 						<div></div>
 
+						{/* TERRAIN */}
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Terrain</label>
-							<input type="text" id="terrain" name="terrain" value={formStore.formData.map} onChange={(e) => formStore.handleInputChange(e)} placeholder='Altis, Chernarus, Farabad, Sahrani, etc..' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+							<input type="text" id="terrain" name="terrain" value={formStore.formData.map} onChange={(e) => formStore.handleInputChange(e)} placeholder='Altis, Chernarus, Farabad, Sahrani, etc..' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 						</div>
 
+						{/* FACTION */}
 						<div className='flex flex-col gap-2'>
 							<label className='text-xl font-semibold uppercase tracking-wide'>Faction</label>
-							<input type="text" id="faction" name="faction" value={formStore.formData.faction} onChange={(e) => formStore.handleInputChange(e)} placeholder='NATO, CSAT, AAF, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+							<input type="text" id="faction" name="faction" value={formStore.formData.faction} onChange={(e) => formStore.handleInputChange(e)} placeholder='NATO, CSAT, AAF, etc...' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 						</div>
 					</div>
 				</div>
 
+				{/* BRIEFING */}
 				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission Briefing</h2>
+
 
 						<div className='flex flex-col gap-10 mt-10'>
 							{formStore.formData.sections.map((section, index) => (
 								<div key={index} className='flex flex-col'>
 									<label className='text-xl font-semibold uppercase tracking-wide'>Briefing Section {index + 1}</label>
 
-									<label className='text-lg mt-2 font-semibold uppercase tracking-wide'>Title *</label>
-									<div className='flex gap-2'>
-										<input type="text" required id="briefing_title" name="briefing_title" value={section.title} onChange={(e) => formStore.handleBriefingChange(e, true, index)} placeholder='Situation, Mission, Objectives, Execution, Enemy forces, etc...' className='mt-2 w-full bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+									<label className='lg:text-lg mt-2 font-semibold uppercase tracking-wide'>Title *</label>
+									<div className='flex gap-2 items-center justify-between mt-2'>
+										<input type="text" required id="briefing_title" name="briefing_title" value={section.title} onChange={(e) => formStore.handleBriefingChange(e, true, index)} placeholder='Situation, Mission, Objectives, Execution, Enemy forces, etc...' className='w-full bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg items-center justify-center'/>
 										
 										{index > 0 && (
-											<button type='button' onClick={() => formStore.removeSection(index)} className='place-self-center bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 h-10 w-10'>
-												<X className='place-self-center'/>
+											<button type='button' onClick={() => formStore.removeSection(index)} className='bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 w-10 h-10 flex shrink-0 items-center justify-center'>
+												<X className='w-6 h-6'/>
 											</button>
 										)}
 									</div>
 
-									<label className='text-lg mt-2 font-semibold uppercase tracking-wide'>Description *</label>
+									<label className='lg:text-lg mt-2 font-semibold uppercase tracking-wide'>Description *</label>
 									<RichTextEditor value={section.description} onChange={(e) => formStore.handleBriefingChange(e, false, index)} placeholder="Lorem ipsum dolor sit amet, consectetur adipiscing elit..."/>
 								</div>
 							))}
@@ -339,24 +350,25 @@ const NewMission = ({type, slug}) => {
 						</div>
 				</div>
 
+				{/* ROLES */}
 				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Roles</h2>
 
 					<div className='flex flex-col gap-2 mt-10'>
 						{formStore.formData.roles.map((role, index) => (
-							<div key={index} className='flex gap-2'>
-								<img src={Object.values(missionStore.availableRoles).find(roleData => roleData.key == role.name).icon} alt="" className='w-10 h-10'/>
+							<div key={index} className='flex gap-2 items-center justify-between'>
+								<img src={Object.values(missionStore.availableRoles).find(roleData => roleData.key == role.name).icon} alt="" className='shrink-0 w-10 h-10'/>
 
-								<select type="select" id="roles_name" name="roles_name" value={role.name} onChange={(e) => formStore.handleRolesChange(e, index)} className=' bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white text-lg focus:outline-none'>
+								<select type="select" id="roles_name" name="roles_name" value={role.name} onChange={(e) => formStore.handleRolesChange(e, index)} className='w-full bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white lg:text-lg focus:outline-none'>
 									{Object.values(missionStore.availableRoles).map((roleData, roleIndex) => (
 										<option key={roleIndex} value={roleData.key}>{roleData.name}</option>
 									))}
 								</select>
 
-								<input type="number" required min="1" max="5" id="roles_slots" name="roles_slots" value={role.slots} onChange={(e) => formStore.handleRolesChange(e, index)} placeholder='0' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white text-lg '/>
+								<input type="number" required min="1" max="5" id="roles_slots" name="roles_slots" value={role.slots} onChange={(e) => formStore.handleRolesChange(e, index)} placeholder='0' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 							
-								<button type='button' onClick={() => formStore.removeRole(index)} className='place-self-center bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 h-10 w-10'>
-									<X className='place-self-center'/>
+								<button type='button' onClick={() => formStore.removeRole(index)} className='bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 w-10 h-10 flex shrink-0 items-center justify-center'>
+									<X className='h-6 w-6'/>
 								</button>
 							</div>
 						))}
@@ -364,6 +376,7 @@ const NewMission = ({type, slug}) => {
 					</div>
 				</div>
 
+				{/* IMAGE */}
 				<div className='lg:p-10 p-5 my-10 rounded-lg bg-black/30 border border-red-900/30 overflow-hidden'>
 					<h2 className='text-3xl font-semibold uppercase tracking-wider'>Mission thumbnail</h2>
 
@@ -394,14 +407,14 @@ const NewMission = ({type, slug}) => {
 					)}
 				</div>
 
-				
+				{/* SUBMIT */}
 				<div className='grid grid-cols-5 mt-20 gap-10'>
 					{type == "edit" ? (
 						<button type='submit' disabled={formStore.isSubmitting} className='lg:col-span-4 col-span-5 bg-red-800/30 hover:bg-red-500/70 disabled:bg-red-900/10 disabled:text-neutral-500 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Edit Mission</button>
 					) : (
 						<button type='submit' disabled={formStore.isSubmitting} className='lg:col-span-4 col-span-5 bg-red-800/30 hover:bg-red-500/70 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Create Mission</button>
 					)}
-					<a href='/' disabled={formStore.isSubmitting} className='text-center bg-black/50 hover:bg-neutral-800/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Cancel</a>
+					<a href='/' disabled={formStore.isSubmitting} className='text-center lg:col-span-1 col-span-5 bg-black/50 hover:bg-neutral-800/50 rounded-md p-2 text-white text-lg uppercase font-semibold tracking-wider transition duration-300'>Cancel</a>
 				
 				</div>
 			</form>

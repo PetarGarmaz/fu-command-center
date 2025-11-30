@@ -4,6 +4,7 @@ import { Calendar, Clock, MapPin, User, ShieldHalf } from 'lucide-react';
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
 import MissionOptions from '@/components/MissionOptions'
+import ClientOnly from "@/components/ClientOnly";
 
 const MissionCard = ({mission}) => {
 	const [creator, setCreator] = useState();
@@ -66,7 +67,7 @@ const MissionCard = ({mission}) => {
 					{/*Other information: Host, map, date, time*/}
 					<div className='mt-5'>
 						<h3 className='text-xl font-semibold uppercase tracking-wide'>INFORMATION:</h3>
-						<div className='grid grid-cols-2 mt-2 gap-2 tracking-wide'>
+						<div className='grid lg:grid-cols-2 grid-cols-1 mt-2 gap-2 tracking-wide'>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<User />
 								<p className='text-sm text-zinc-400'>{mission.host}</p>
@@ -77,11 +78,15 @@ const MissionCard = ({mission}) => {
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Calendar />
-								<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								<ClientOnly>
+									<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								</ClientOnly>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Clock />
-								<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								<ClientOnly>
+									<p className='text-sm text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								</ClientOnly>
 							</div>
 							{mission.faction && (
 								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
@@ -96,7 +101,7 @@ const MissionCard = ({mission}) => {
 					{mission.roles.length > 0 && (
 						<div className='mt-5'>
 							<h3 className='text-xl font-semibold uppercase tracking-wide'>Roles:</h3>
-							<div className='grid grid-cols-2 mt-2 gap-2'>
+							<div className='grid lg:grid-cols-2 grid-cols-1 mt-2 gap-2'>
 								{missionRoles.map((role, index) => (
 									<div key={index} className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 										<img src={role.icon} alt="" className='w-6 h-6'/>

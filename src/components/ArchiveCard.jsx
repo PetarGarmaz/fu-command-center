@@ -4,6 +4,7 @@ import { Calendar, Clock, MapPin, User, CheckCircle, XCircle, ChevronRight, Shie
 import Link from 'next/link';
 import { userStore } from '@/stores/userStore';
 import MissionOptions from '@/components/MissionOptions'
+import ClientOnly from "@/components/ClientOnly";
 
 const ArchiveCard = ({mission}) => {
 	const [creator, setCreator] = useState();
@@ -81,12 +82,16 @@ const ArchiveCard = ({mission}) => {
 					</div>
 					<div className='flex gap-2'>
 						<Calendar className=''/>
-						<p className='lg:block hidden'>{new Date(mission.date).toLocaleDateString("en-GB", {weekday: "long", year: "numeric", month: "long", day: "numeric"})}</p>
-						<p className='lg:hidden'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+						<ClientOnly>
+							<p className='lg:block hidden'>{new Date(mission.date).toLocaleDateString("en-GB", {weekday: "long", year: "numeric", month: "long", day: "numeric"})}</p>
+							<p className='lg:hidden'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+						</ClientOnly>
 					</div>
 					<div className='flex gap-2'>
 						<Clock className=''/>
-						<p>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+						<ClientOnly>
+							<p>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+						</ClientOnly>
 					</div>
 					{mission.faction && (
 						<div className='flex gap-2'>

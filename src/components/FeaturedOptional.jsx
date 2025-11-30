@@ -2,21 +2,18 @@ import React, {useEffect, useState} from 'react'
 import {roleData} from "@/utilities/roles.js"
 import { Calendar, Clock, MapPin, User, Target, ShieldHalf} from 'lucide-react';
 import Link from 'next/link';
-import { userStore } from '@/stores/userStore';
 import MissionOptions from '@/components/MissionOptions'
+import ClientOnly from "@/components/ClientOnly";
 
 const Featured = ({mission}) => {
-	const [creator, setCreator] = useState();
 	const [thumbnail, setThumbnail] = useState();
 	const [description, setDescription] = useState();
 	const [shortDescription, setShortDescription] = useState();
 	const [missionRoles, setMissionRoles] = useState();
 	const [mounted, setMounted] = useState(false);
-	const [linkedMission, setLinkedMission] = useState();
 
 	useEffect(() => {
 		if(mission) {
-			setCreator(userStore.allUsers.find(u => u.id == mission.creator));
 			setThumbnail(mission.image ? mission.image : "/fu_placeholder.jpg");
 			setDescription(mission.sections[0]);
 			setShortDescription(mission.sections[0].description.slice(0,250));
@@ -33,11 +30,7 @@ const Featured = ({mission}) => {
 		}
 	}, [mission]);
 
-	if (!mounted) {
-		return (
-			<div></div>
-		);
-	};
+	if (!mounted) return null;
 
 	return (
 		<section id='featured' className='relative group rounded-lg backdrop-blur-lg bg-black/30 border border-cyan-700/30 hover:bg-cyan-500/10 my-5 overflow-hidden transition duration-300'>
@@ -78,11 +71,15 @@ const Featured = ({mission}) => {
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Calendar className='place-self-center'/>
-								<p className='text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								<ClientOnly>
+									<p className='text-zinc-400'>{new Date(mission.date).toLocaleDateString("en-GB", {year: "numeric", month: "numeric", day: "numeric"})}</p>
+								</ClientOnly>
 							</div>
 							<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
 								<Clock className=' place-self-center'/>
-								<p className='text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								<ClientOnly>
+									<p className='text-zinc-400'>{new Date(mission.date).toLocaleTimeString("en-GB", {hour: "2-digit",minute: "2-digit",})}</p>
+								</ClientOnly>
 							</div>
 							{mission.faction && (
 								<div className='flex gap-2 bg-neutral-800/50 border border-neutral-800 rounded-md p-1'>
