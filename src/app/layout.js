@@ -21,20 +21,20 @@ export const metadata = {
 		siteName: "FUCC",
 		images: [
 		{
-			url: "https://fu-command-center.vercel.app/placeholder_img.jpg",
-			width: 1200,
-			height: 630,
+			url: "https://fu-command-center.vercel.app/FUCC - Logo Icon Nav.png",
+			width: 256,
+      		height: 256,
 		},
 		],
 		type: "website",
 	},
 	twitter: {
-		card: "summary_large_image",
+		card: "summary",
 		title: "FUCC - FU Command Center",
 		description: "View, search and schedule mission briefings.",
-		images: ["https://fu-command-center.vercel.app/placeholder_img.jpg"],
+		images: ["https://fu-command-center.vercel.app/FUCC - Logo Icon Nav.png"],
 	},
-	};
+};
 
 export default function RootLayout({ children }) {
 	return (
