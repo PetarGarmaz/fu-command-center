@@ -2,7 +2,7 @@ import Mission from '@/components/Mission'
 import { supabase } from "@/utilities/supabaseClient";
 
 export async function generateMetadata({ params }) {
-	const post = await await supabase.from("missions").select("*").find(mission => mission.slug == params.slug);
+	const post = await await supabase.from("missions").select("*").eq("slug", params.slug).single();
 
 	return {
 		title: post.title,
