@@ -291,6 +291,7 @@ const NewMission = ({type, slug}) => {
 							<select type="select" id="type" name="type" value={formStore.formData.type} onChange={formStore.handleInputChange} className=' bg-zinc-900 border border-neutral-800 focus:border-red-800/30 rounded-md p-2 text-white lg:text-lg focus:outline-none'>
 								<option value="main">Main</option>
 								<option value="optional">Optional</option>
+								<option value="training">Training</option>
 							</select>
 						</div>
 
@@ -386,7 +387,7 @@ const NewMission = ({type, slug}) => {
 							
 							<Upload className="w-12 h-12 mx-auto mb-4" />
 							<p className="mb-2">Drag and drop images here.</p>
-							<p className="text-gray-500 text-sm mb-4">.png, .jpg, .bmp, .gif</p>
+							<p className="text-gray-500 text-sm mb-4">Maximum file size: 5MB. Allowed image types: .png, .jpg, .bmp, .gif</p>
 
 							<input type="file" accept="image/*" onChange={(e) => handleImageUpload(e.target.files)} className="hidden" id="image"/>
 

@@ -9,6 +9,7 @@ class MissionStore {
 
 	featuredMission = null;
 	featuredMissionOptional = null;
+	featuredMissionTraining = null;
 	upcomingMissions = [];
 	archivedMissions = [];
 	profileMissions = [];
@@ -128,8 +129,8 @@ class MissionStore {
 
 		if(upcoming.length > 0) {
 			const upcomingMain = upcoming.find(m => m.type === "main");
-			const upcomingOptional = upcoming.find(m => m.type !== "main");
-			console.log(upcomingOptional);
+			const upcomingOptional = upcoming.find(m => m.type === "optional");
+			const upcomingTraining = upcoming.find(m => m.type === "training");
 
 			const futureDate = new Date();
 			futureDate.setHours(0, 0, 0, 0);
@@ -153,7 +154,18 @@ class MissionStore {
 				if(featuredDate <= futureDate) {
 					this.featuredMissionOptional = upcomingOptional;
 				} else {
-					this.featuredMission = null;
+					this.featuredMissionOptional = null;
+				}
+			}
+
+			if(upcomingTraining) {
+				const featuredDate = new Date(upcomingTraining.date);
+				featuredDate.setHours(0, 0, 0, 0);
+
+				if(featuredDate <= futureDate) {
+					this.featuredMissionTraining = upcomingTraining;
+				} else {
+					this.featuredMissionTraining = null;
 				}
 			}
 		} else {

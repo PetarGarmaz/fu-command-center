@@ -5,7 +5,7 @@ import Link from 'next/link';
 import MissionOptions from '@/components/MissionOptions'
 import ClientOnly from "@/components/ClientOnly";
 
-const FeaturedOptional = ({mission}) => {
+const FeaturedTraining = ({mission}) => {
 	const [thumbnail, setThumbnail] = useState();
 	const [description, setDescription] = useState();
 	const [shortDescription, setShortDescription] = useState();
@@ -33,9 +33,9 @@ const FeaturedOptional = ({mission}) => {
 	if (!mounted) return null;
 
 	return (
-		<section id='featured' className='relative group rounded-lg backdrop-blur-lg bg-black/30 border border-cyan-700/30 hover:bg-cyan-500/10 my-5 overflow-hidden transition duration-300'>
+		<section id='featured' className='relative group rounded-lg backdrop-blur-lg bg-black/30 border border-amber-700/30 hover:bg-amber-500/10 my-5 overflow-hidden transition duration-300'>
 			{/*Special line*/}
-			<div className='absolute bg-cyan-500 top-0 left-0 h-1 w-full z-20'></div>
+			<div className='absolute bg-amber-500 top-0 left-0 h-1 w-full z-20'></div>
 
 			<div className='grid lg:grid-cols-3 lg:grid-rows-1 gap-0'>
 				{/*Thumbnail*/}
@@ -45,7 +45,7 @@ const FeaturedOptional = ({mission}) => {
 
 				{/*Mission information*/}
 				<div className='relative px-5 py-5 lg:col-span-2 col-span-1'>
-					<div className={`flex bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold`}>OPTIONAL MISSION</div>
+					<div className={`flex bg-amber-500/20 border w-fit border-amber-500 rounded-full px-2 text-amber-500 text-sm font-semibold`}>TRAINING MISSION</div>
 					<div className='flex items-start justify-between gap-5'>
 						<h1 className=' uppercase mt-5 text-2xl tracking-wider font-bold'>{mission.title}</h1>
 						<MissionOptions mission={mission}/>
@@ -107,7 +107,7 @@ const FeaturedOptional = ({mission}) => {
 
 					{/*View button*/}
 					<div className='mt-10 flex mx-auto'>
-						<Link href={`/missions/${mission.slug}`} className='py-3 w-full rounded-lg text-center bg-cyan-900 hover:bg-cyan-600 transition duration-300 uppercase tracking-wide font-bold lg:text-xl text-base'>View details</Link>
+						<Link href={`/missions/${mission.slug}`} className='py-3 w-full rounded-lg text-center bg-amber-900 hover:bg-amber-600 transition duration-300 uppercase tracking-wide font-bold lg:text-xl text-base'>View details</Link>
 					</div>
 
 				</div>
@@ -116,4 +116,4 @@ const FeaturedOptional = ({mission}) => {
 	)
 }
 
-export default FeaturedOptional
+export default FeaturedTraining

@@ -43,7 +43,8 @@ const ArchiveCard = ({mission}) => {
 			
 			{/*Mission information*/}
 			<div className='relative px-5 py-5'>
-				<div className={`flex ${mission.type === "main" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold mb-5`}>OPTIONAL MISSION</div>
+				<div className={`flex ${mission.type !== "optional" && "hidden"} bg-cyan-500/20 border w-fit border-cyan-500 rounded-full px-2 text-cyan-500 text-sm font-semibold mb-5`}>OPTIONAL MISSION</div>
+				<div className={`flex ${mission.type !== "training" && "hidden"} bg-amber-500/20 border w-fit border-amber-500 rounded-full px-2 text-amber-500 text-sm font-semibold mb-5`}>TRAINING MISSION</div>
 				
 				<div className='flex items-center justify-between'>
 
