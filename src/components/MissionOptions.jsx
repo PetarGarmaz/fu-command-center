@@ -39,7 +39,7 @@ const MissionOptions = ({mission}) => {
 		);
 	};
 
-	if(userStore.currentUser?.id !== mission.creator && !userStore.currentUser.isAdmin) {
+	if(userStore.currentUser?.id !== mission.creator && !userStore.currentUser?.isAdmin) {
 		return (
 			<div></div>
 		);
