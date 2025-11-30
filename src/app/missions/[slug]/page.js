@@ -7,7 +7,7 @@ export async function generateMetadata({ params }) {
 	const { data, error } = await supabase.from("missions").select("*");
 	const post = data.find(mission => mission.slug === slug);
 
-	const title = "FUCC Mission Briefing - " + post?.title;
+	const title = post?.title;
 	const description = html2md(post?.sections[0].description);
 	const shortDescription = description.slice(0, 125);
 
