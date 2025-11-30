@@ -2,7 +2,9 @@ import Mission from '@/components/Mission'
 import { supabase } from "@/utilities/supabaseClient";
 
 export async function generateMetadata({ params }) {
-	const { data: post, error } = await supabase.from("missions").select("*").eq("slug", params.slug).single();
+	const { slug } = await params;
+	const { data, error } = await supabase.from("missions").select("*");
+	const post = data.find(mission => mission.slug === slug);
 
 	return {
 		title: post?.title,
@@ -10,7 +12,7 @@ export async function generateMetadata({ params }) {
 		openGraph: {
 			title: post?.title,
 			description: post?.sections[0].description,
-			url: `https://fu-command-center.vercel.app/missions/${params.slug}`,
+			url: `https://fu-command-center.vercel.app/missions/${slug}`,
 			images: [
 				{
 					url: post?.image ?? "https://fu-command-center.vercel.app/fu_placeholder.jpg",
