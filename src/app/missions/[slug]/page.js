@@ -35,7 +35,7 @@ export async function generateMetadata({ params }) {
 				post?.image ??
 				"https://fu-command-center.vercel.app/fu_placeholder.jpg",
 				width: 1200,
-				height: 630,
+				height: 675,
 			},
 			],
 			type: "article",

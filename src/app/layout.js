@@ -22,8 +22,8 @@ export const metadata = {
 		images: [
 		{
 			url: "https://fu-command-center.vercel.app/FUCC - Logo Icon Nav.png",
-			width: 256,
-      		height: 256,
+			width: 512,
+      		height: 512,
 		},
 		],
 		type: "website",
