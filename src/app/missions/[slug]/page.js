@@ -24,7 +24,7 @@ export async function generateMetadata({ params }) {
 					height: 630,
 				},
 			],
-			type: "website",
+			type: "article",
 		},
 	};
 }
