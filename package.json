@@ -19,7 +19,6 @@
     "react": "19.2.0",
     "react-datepicker": "^8.9.0",
     "react-dom": "19.2.0",
-    "react-quill": "^2.0.0",
     "react-quill-new": "^3.6.0",
     "supabase": "^2.58.5"
   },

@@ -78,7 +78,7 @@ const imageHandler = () => {
     'header',
     'bold', 'italic', 'underline', 'strike',
 	"align",
-    'list', 'bullet',
+    'list',
     'blockquote', 'code-block',
     'link', "image"
   ];
