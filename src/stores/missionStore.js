@@ -359,8 +359,9 @@ class MissionStore {
 
 	handleDiscordMessage = async (data) => {
 		try {
+			const url = `https://a3.fugaming.org/missions/${data.slug}`;
 			const timestamp = new Date(data.date).getTime() / 1000;
-			const title = `***${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${timestamp}:F>***`;
+			const title = `***${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${timestamp}:F>\n[View in FUCC](${url})***`;
 			const pingRole = "<@&791754189592199210>";
 			const separator = "\n\n"
 			let description = "";
@@ -391,7 +392,7 @@ class MissionStore {
 				"attachments": []
 			};
 
-			await fetch("https://discord.com/api/webhooks/1308822894289227848/HNlOl_RzQbMxBJvz8Rrofk6poiFQgA1aVrDbKIx0lIPhiODUMexs5_q2a6RnweKzhVXJ", {
+			await fetch(process.env.NEXT_PUBLIC_DISCORD_WEBHOOK, {
 				headers: {
 					"Content-Type": "application/json",
 				},
