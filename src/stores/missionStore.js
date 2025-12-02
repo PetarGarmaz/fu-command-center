@@ -362,7 +362,7 @@ class MissionStore {
 			const url = `https://a3.fugaming.org/missions/${data.slug}`;
 			const timestamp = new Date(data.date).getTime() / 1000;
 			const title = `***${data.title}\nHost: ${data.host}\n-----------------------------------\n<t:${timestamp}:F>\n[View in FUCC](${url})***`;
-			const pingRole = "<@&791754189592199210>";
+			const pingRole = "<@531225772849889300>";
 			const separator = "\n\n"
 			let description = "";
 			let roles = "# Attendance:\nReact with <:Yes:533938287908356096> if you'll make it on time for the OP.\nReact with ❓ if you're not sure if you'll make it.\nReact with <:No:533938399594151936> if you won't be able to make it.\n\n# Roles:\nReact with 👑 if you want to be a SL.\nReact with 🐔 if you want to be a PL.\n";
