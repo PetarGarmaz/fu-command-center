@@ -87,6 +87,7 @@ export const roleData = {
 		id: "",
 		key: "support",
 		name: "Support",
+		isEmoji: true,
 		emoji: "🛡️",
 		icon: "/roles/shield.png"
 	},
@@ -95,5 +96,13 @@ export const roleData = {
 		key: "uav",
 		name: "UAV",
 		icon: "/roles/a3_uav.png"
-	}
+	},
+	zeus: {
+		id: "",
+		key: "zeus",
+		name: "Zeus",
+		isEmoji: true,
+		emoji: "⚡",
+		icon: "/roles/zap.png"
+	},
 };
