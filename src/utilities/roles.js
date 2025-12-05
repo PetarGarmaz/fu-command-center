@@ -17,6 +17,22 @@ export const roleData = {
 		name: "Empty",
 		icon: "/roles/a3_empty.png"
 	},
+	engineer: {
+		id: "",
+		key: "engineer",
+		name: "Engineer",
+		isEmoji: true,
+		emoji: "🔧",
+		icon: "/roles/wrench.png"
+	},
+	fac: {
+		id: "",
+		key: "fac",
+		name: "FAC",
+		isEmoji: true,
+		emoji: "📻",
+		icon: "/roles/radio.png"
+	},
 	helicopter: {
 		id: "610456769210089492",
 		key: "helicopter",
@@ -47,6 +63,14 @@ export const roleData = {
 		name: "Motorized",
 		icon: "/roles/a3_motorized.png"
 	},
+	naval: {
+		id: "",
+		key: "naval",
+		name: "Naval",
+		isEmoji: true,
+		emoji: "⚓",
+		icon: "/roles/anchor.png"
+	},
 	plane: {
 		id: "610456827154661393",
 		key: "plane",
@@ -58,6 +82,13 @@ export const roleData = {
 		key: "recon",
 		name: "Recon",
 		icon: "/roles/a3_recon.png"
+	},
+	support: {
+		id: "",
+		key: "support",
+		name: "Support",
+		emoji: "🛡️",
+		icon: "/roles/shield.png"
 	},
 	uav: {
 		id: "610456847694168074",

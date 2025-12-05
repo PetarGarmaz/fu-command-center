@@ -26,7 +26,6 @@ class UserStore {
 					this.loadUsers(true);
 					localStorage.removeItem("authInitiated");
 				} else {
-					console.log (event, session);
 					//Have a session and its initialized
 					this.loadUsers(false);
 				}
@@ -157,7 +156,6 @@ class UserStore {
 
 	updateUser = async (updatedUser) => {
 		const index = this.allUsers.findIndex(user => user.id === updatedUser.id);
-		console.log(index);
 
 		if(index !== -1) {
 			const { error } = await supabase.from('users').update(updatedUser).eq('id', updatedUser.id);
