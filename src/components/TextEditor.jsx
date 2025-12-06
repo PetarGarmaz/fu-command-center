@@ -56,6 +56,7 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 			container: [
 				[{ header: [2, 3, false] }],
 				["bold", "italic", "underline", "strike"],
+				[{ color: [] }],
 				[{ align: [] }],
 				[{ list: "ordered" }, { list: "bullet" }],
 				["blockquote", "code-block"],
@@ -69,6 +70,7 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 	const formats = [
 		'header',
 		'bold', 'italic', 'underline', 'strike',
+		"color",
 		'align',
 		'list',
 		'blockquote', 'code-block',
