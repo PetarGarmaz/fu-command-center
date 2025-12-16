@@ -23,6 +23,7 @@ const MissionOptions = ({mission}) => {
 		setIsSubmitting(true);
 
 		await missionStore.handleDiscordMessage(mission);
+		alert("You've posted the discord message!");
 
 		setIsSubmitting(false);
 	};
