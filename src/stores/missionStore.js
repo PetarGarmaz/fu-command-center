@@ -389,17 +389,22 @@ class MissionStore {
 				color = 15105570;
 			};
 
+			embeds.push ({
+				"description": title,
+				"color": color
+			});
+
 			data.sections.forEach(element => {
 				const markdown = html2md(element.description);
 				const embeddedElement = {
 					"description": "# " + element.title + ":\n" + markdown,
-					"color": color,
+					"color": color
 				}
 				embeds.push(embeddedElement);
 			});
 
 			embeds.push ({
-				"description": title + separator + description + "\n" + roles + separator,
+				"description": roles,
 				"color": color,
 				"image": {"url": `${data.image ? data.image : ""}`}
 			});
