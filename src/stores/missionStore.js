@@ -367,12 +367,7 @@ class MissionStore {
 			let color = 16711680;
 			let description = "";
 			let roles = "# Attendance:\nReact with <:Yes:533938287908356096> if you'll make it on time for the OP.\nReact with ❓ if you're not sure if you'll make it.\nReact with <:No:533938399594151936> if you won't be able to make it.\n\n# Roles:\nReact with 👑 if you want to be a SL.\nReact with 🐔 if you want to be a PL.\n";
-
-			data.sections.forEach(element => {
-				const markdown = html2md(element.description);
-				description += "# " + element.title + ":\n";
-				description += markdown + "\n\n";
-			});
+			let embeds = [];
 
 			data.roles.forEach(element => {
 				const role = Object.values(roleData).find(role => role.key == element.name);
@@ -394,13 +389,20 @@ class MissionStore {
 				color = 15105570;
 			};
 
-			let embeds = [
-				{
-					"description": title + separator + description + "\n" + roles + separator,
+			data.sections.forEach(element => {
+				const markdown = html2md(element.description);
+				const embeddedElement = {
+					"description": "# " + element.title + ":\n" + markdown,
 					"color": color,
-					"image": {"url": `${data.image ? data.image : ""}`}
 				}
-			];
+				embeds.push(embeddedElement);
+			});
+
+			embeds.push ({
+				"description": title + separator + description + "\n" + roles + separator,
+				"color": color,
+				"image": {"url": `${data.image ? data.image : ""}`}
+			});
 
 			const message = {
 				"content": pingRole + separator,
@@ -408,7 +410,7 @@ class MissionStore {
 				"attachments": []
 			};
 
-			await fetch(process.env.NEXT_PUBLIC_DISCORD_WEBHOOK, {
+			const res = await fetch(process.env.NEXT_PUBLIC_DISCORD_WEBHOOK, {
 				headers: {
 					"Content-Type": "application/json",
 				},
