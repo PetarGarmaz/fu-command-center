@@ -375,9 +375,9 @@ class MissionStore {
 				const isDefaultEmoji = role.isEmoji;
 				
 				if(isDefaultEmoji) {
-					roles += `React with ${role.emoji} for a ${element.name} role. [${element.slots} ${element.slots > 1 ? "Slots" : "Slot"}]`;
+					roles += `React with ${role.emoji} for a ${element.name} role. [${element.slots} ${element.slots > 1 ? "Slots" : "Slot"}] \n`;
 				} else {
-					roles += `React with <:a3_${element.name}:${roleID}> for a ${element.name} role. [${element.slots} ${element.slots > 1 ? "Slots" : "Slot"}]`;
+					roles += `React with <:a3_${element.name}:${roleID}> for a ${element.name} role. [${element.slots} ${element.slots > 1 ? "Slots" : "Slot"}] \n`;
 				}
 			});
 
