@@ -366,7 +366,7 @@ const NewMission = ({type, slug}) => {
 									))}
 								</select>
 
-								<input type="number" required min="1" max="5" id="roles_slots" name="roles_slots" value={role.slots} onChange={(e) => formStore.handleRolesChange(e, index)} placeholder='0' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
+								<input type="number" required min="1" max="50" id="roles_slots" name="roles_slots" value={role.slots} onChange={(e) => formStore.handleRolesChange(e, index)} placeholder='0' className='bg-zinc-900 border border-neutral-800 focus:border-red-800/30 focus:outline-none rounded-md p-2 text-white lg:text-lg '/>
 							
 								<button type='button' onClick={() => formStore.removeRole(index)} className='bg-red-800/30 hover:bg-red-600/50 rounded-md text-white transition duration-300 w-10 h-10 flex shrink-0 items-center justify-center'>
 									<X className='h-6 w-6'/>
