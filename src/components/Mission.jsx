@@ -153,7 +153,7 @@ const Mission = ({slug}) => {
 						<div className='space-y-10'>
 							{mission.sections.map((m, index) => (
 								<div key={index} className=''>
-									<h2 className='lg:text-2xl text-xl font-semibold uppercase tracking-wide'>{m.title}</h2>
+									<h2 id={m.title} className='lg:text-2xl text-xl font-semibold uppercase tracking-wide'>{m.title}</h2>
 									<div dangerouslySetInnerHTML={{ __html: m.description }} className='quill-content mt-5 lg:text-lg tracking-wide whitespace-pre-wrap'/>
 								</div>
 							))}
