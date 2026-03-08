@@ -62,9 +62,25 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 				["blockquote", "code-block"],
 				["link", "image"],
 				["clean"],
+				["undo", "redo"]
 			],
-			handlers: { image: imageHandler },
+			handlers: {
+				image: imageHandler,
+				undo: function () {
+					const quill = quillRef.current.getEditor();
+					quill.history.undo();
+				},
+				redo: function () {
+					const quill = quillRef.current.getEditor();
+					quill.history.redo();
+				}
+			},
 		},
+		history: {
+			delay: 1000,     // group changes within 1s
+			maxStack: 100,   // max undo steps
+			userOnly: true   // ignore programmatic changes
+		}
 	};
 
 	const formats = [
