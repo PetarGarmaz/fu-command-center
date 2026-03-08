@@ -1,7 +1,7 @@
 'use client';
 
 import { supabase } from "@/utilities/supabaseClient";
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import dynamic from 'next/dynamic';
 import 'react-quill-new/dist/quill.snow.css';
 
@@ -51,7 +51,7 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 		};
 	};
 
-	const modules = {
+	const modules = useMemo(() => ({
 		toolbar: {
 			container: [
 				[{ header: [2, 3, false] }],
@@ -67,21 +67,19 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 			handlers: {
 				image: imageHandler,
 				undo: function () {
-					const quill = quillRef.current.getEditor();
-					quill.history.undo();
+					this.quill.history.undo();
 				},
 				redo: function () {
-					const quill = quillRef.current.getEditor();
-					quill.history.redo();
+					this.quill.history.redo();
 				}
-			},
+			}
 		},
 		history: {
-			delay: 1000,     // group changes within 1s
-			maxStack: 100,   // max undo steps
-			userOnly: true   // ignore programmatic changes
+			delay: 1000,
+			maxStack: 100,
+			userOnly: true
 		}
-	};
+	}), []);
 
 	const formats = [
 		'header',
@@ -104,7 +102,6 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 	return (
 		<div className="rich-text-editor flex flex-col">
 
-			{/* Tabs */}
 			<div className="flex border-b border-zinc-700 mb-1">
 				<button
 					type="button"
@@ -131,7 +128,6 @@ export default function RichTextEditor({ value, onChange, placeholder }) {
 				</button>
 			</div>
 
-			{/* HTML MODE */}
 			{htmlMode ? (
 				<textarea
 					className="w-full min-h-[200px] bg-zinc-900 border border-neutral-800 rounded-md p-3 text-white text-sm"
